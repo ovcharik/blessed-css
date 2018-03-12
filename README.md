@@ -10,9 +10,9 @@ npm install https://github.com/ovcharik/blessed-css
 ```
 
 
-## Example
+## [Example](/examples)
 
-[![asciicast](https://asciinema.org/a/BCjEbpYMqpdaTsJbEJkoJfeL9.png)](https://asciinema.org/a/BCjEbpYMqpdaTsJbEJkoJfeL9)
+[![asciicast](https://asciinema.org/a/BCjEbpYMqpdaTsJbEJkoJfeL9.png)](https://asciinema.org/a/BCjEbpYMqpdaTsJbEJkoJfeL9?t=5)
 
 ```javascript
 const css = `
@@ -53,7 +53,7 @@ const css = `
 `;
 
 const blessed = require('blessed');
-const blessedCss = require('..');
+const blessedCss = require('blessed-css');
 
 const screen = blessed.screen();
 blessedCss.attach(screen, css);
