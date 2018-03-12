@@ -1,0 +1,30 @@
+{
+  "name": "blessed-css",
+  "version": "0.0.0",
+  "description": "CSS for blessed",
+  "main": "lib/index.js",
+  "scripts": {},
+  "keywords": [
+    "blessed",
+    "css",
+    "curse",
+    "ncurse",
+    "cli",
+    "cli ui",
+    "command line",
+    "command line ui"
+  ],
+  "author": {
+    "name": "Maksim Ovcharik",
+    "email": "<maksim.ovcharik@gmail.com>"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "css": "^2.2.1"
+  },
+  "devDependencies": {
+    "blessed": "^0.1.81",
+    "less": "^2.7.2",
+    "less-plugin-lists": "^1.1.1"
+  }
+}
