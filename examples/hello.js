@@ -1,5 +1,5 @@
 const css = `
-  * { color: white; }
+  * { color: white !important; }
 
   .bg-black { background: black; }
   .bg-white { background: white; }
