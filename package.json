@@ -4,7 +4,7 @@
   "description": "CSS for blessed",
   "main": "lib/index.js",
   "scripts": {
-    "inspect": "nodemon --watch examples --watch lib --inspect=localhost:9222"
+    "inspect": "node --inspect=localhost:9222"
   },
   "keywords": [
     "blessed",
