@@ -1,6 +1,6 @@
 const Weight = require('./weight');
 
-const parse = require('./utils/property-parser');
+const PropertyParser = require('./utils/property-parser');
 
 
 class PropertyError extends Error {
@@ -15,9 +15,17 @@ class PropertyError extends Error {
 
 class Property {
 
+  static get defaults() {
+    if (!this.__defaults) {
+      this.__defaults = PropertyParser.defaults
+        .map(p => new Property(p));
+    }
+    return this.__defaults;
+  }
+
   static parse(declaration = {}) {
     const { position, property, value } = declaration;
-    const parsed = parse(property, value, { position });
+    const parsed = PropertyParser.parse(property, value, { position });
     return parsed.map(options => new Property(options));
   }
 
@@ -27,9 +35,10 @@ class Property {
     return extracted;
   }
 
-  static flatSortFilter(groups = []) {
+  static flatSortFilter(groups = [], withDefaults = false) {
     return groups
       .reduce((m, v) => [...m, ...v], [])
+      .concat(withDefaults ? this.defaults : [])
       .sort((a, b) => b.weight.cmp(a.weight))
       .filter((p, i, a) => i == a.findIndex(f => p.property === f.property));
   }

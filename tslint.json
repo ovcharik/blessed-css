@@ -1,0 +1,22 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "no-console": {
+      "severity": "warning"
+    },
+    "no-empty": {
+      "severity": "warning"
+    },
+    "no-empty-interface": {
+      "severity": "warning"
+    },
+    "quotemark": false,
+    "member-ordering": false,
+    "interface-name": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false
+  }
+}

@@ -100,8 +100,11 @@ const helpers = {
     valueMap: {
       'nth-child'       : { method: 'position' },
       'nth-of-type'     : { method: 'position' },
+      'nth-in-list'     : { method: 'position' },
+
       'nth-last-child'  : { method: 'position' },
       'nth-last-of-type': { method: 'position' },
+      'nth-last-in-list': { method: 'position' },
     },
 
     parse(type, value, arg) {
@@ -113,22 +116,26 @@ const helpers = {
     },
 
     position(arg='', { inverse=false }) {
-      //                        [  $1   ]  [      $2      ][ $3 ][$4][      $5       ] [   $6   ]
-      const match = arg.match(/^([-+]\d+)$|([-+]??(?=\d|n))(\d*?)(n?)([-+]?(?=\d)\d*)$|(even|odd)$/);
+      const match = arg.replace(/\s/g, '')
+        // https://regex101.com/r/oLXkqV/1
+        //      [       a        ][ n ][   b    ] [         ]
+        .match(/^([-+]?(?=\d|n)\d*)(n?)([-+]\d+)?$|(even|odd)$/);
+
       if (!match) {
         throw new SelectorError(arg, 'Can not parse argument');
       }
+
       let n, a, b;
-      if (match[6]) {
+      if (match[4]) {
         n = true;
-        a = (match[6] === 'even') ? 2 : 1;
+        a = (match[4] === 'even') ? 2 : 1;
         b = 0;
       } else {
-        n = Boolean(match[4]);
-        a = Number(match[1] || match[3] || n && 1 || 0) * (match[2] === '-' ? -1 : 1);
-        b = Number(match[5] || 0);
+        n = Boolean(match[2]);
+        a = Number(match[1].replace(/^([-+]?)$/, '$11'));
+        b = Number(match[3] || 0);
       }
-      return (node, x) => n ? ((x - b) >= 0 && ((x - b) / a) % 1 === 0) : (a + b === x);
+      return (node, x) => n ? ((x-b)/a>=0 && (x-b)/a%1==0) : (a+b==x);
     },
   },
 };

@@ -64,6 +64,7 @@ class NodeStyle {
       attrs    : '_actionAttrs',
       focus    : '_actionInput',
       hover    : '_actionInput',
+      select   : '_actionInput',
       node     : '_actionNode',
       children : '_actionChildren',
     };
@@ -98,6 +99,10 @@ class NodeStyle {
       return NodeStyle.render({ node, blessedCss: this.blessedCss });
     });
 
+    if (this.node.type === 'screen') {
+      return;
+    }
+
     this.properties = this.stylesheet.getProperties(this);
     this.properties.forEach(({ property, value, path }) => {
       if (!path) { return; }
@@ -112,8 +117,9 @@ class NodeStyle {
       setValueLabel: {
         let current = this.node;
         for (let step of head) {
+          if (!current[step]) { current[step] = {}; }
           current = current[step];
-          if (!current) break setValueLabel;
+          // if (!current) break setValueLabel;
         }
         current[tail] = value;
       }
@@ -141,14 +147,23 @@ class NodeStyle {
 
   _actionNode({ type, value }) {
     if (!this.parentNode) { return; }
-    const children = this.parentNode.children;
+    const parentNode = this.parentNode;
+    const children = parentNode.children;
     const nodeType = this.node.type;
     const childrenType = children.filter(c => c.type === nodeType);
+    const parentList = parentNode.items || [];
+    const indexList = parentList.indexOf(this.node);
+
     return this._applyPatch('node', {
-      index: children.indexOf(this.node) + 1,
+      index: children.indexOf(this.node),
       total: children.length,
-      indexType: childrenType.indexOf(this.node) + 1,
+
+      indexType: childrenType.indexOf(this.node),
       totalType: childrenType.length,
+
+      indexList: indexList,
+      totalList: parentList.length,
+      isSelected: parentNode.selected === indexList,
     });
   }
 
@@ -186,20 +201,32 @@ class NodeStyle {
 
     // node position
     if (node) {
-      const { index:ai, total:at, indexType:ti, totalType:tt } = node;
+      const {
+        index:ai, total:at,
+        indexType:ti, totalType:tt,
+        indexList:li, totalList:lt,
+      } = node;
       result.push(
-        { type: 'pseudo', value: (ai ===  1) && 'first-child'   },
+        { type: 'pseudo', value: (ai ===  0) && 'first-child'   },
         { type: 'pseudo', value: (ai === at) && 'last-child'    },
-        { type: 'pseudo', value: (at ===  1) && 'only-child'    },
+        { type: 'pseudo', value: (at ===  0) && 'only-child'    },
 
-        { type: 'pseudo', value: (ti ===  1) && 'first-of-type' },
+        { type: 'pseudo', value: (ti ===  0) && 'first-of-type' },
         { type: 'pseudo', value: (ti === tt) && 'last-of-type'  },
-        { type: 'pseudo', value: (tt ===  1) && 'only-of-type'  },
+        { type: 'pseudo', value: (tt ===  0) && 'only-of-type'  },
 
-        { type: 'pseudo', value: 'nth-child'       , args: [ai]          },
-        { type: 'pseudo', value: 'nth-last-child'  , args: [at - ai + 1] },
-        { type: 'pseudo', value: 'nth-of-type'     , args: [ti]          },
-        { type: 'pseudo', value: 'nth-last-of-type', args: [tt - ti + 1] }
+        { type: 'pseudo', value: (li ===  0) && 'first-in-list' },
+        { type: 'pseudo', value: (li === lt) && 'last-in-list'  },
+        { type: 'pseudo', value: (lt ===  0) && 'only-in-list'  },
+
+        { type: 'pseudo', value: 'nth-child'       , args: [ai +  1] },
+        { type: 'pseudo', value: 'nth-last-child'  , args: [at - ai] },
+        { type: 'pseudo', value: 'nth-of-type'     , args: [ti +  1] },
+        { type: 'pseudo', value: 'nth-last-of-type', args: [tt - ti] },
+        { type: 'pseudo', value: 'nth-in-list'     , args: [li +  1] },
+        { type: 'pseudo', value: 'nth-last-in-list', args: [lt - li] },
+
+        { type: 'pseudo', value: node.isSelected && 'selected' }
       );
     } else {
       // screen node has not parent

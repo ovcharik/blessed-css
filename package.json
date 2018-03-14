@@ -2,9 +2,14 @@
   "name": "blessed-css",
   "version": "0.0.0",
   "description": "CSS for blessed",
-  "main": "lib/index.js",
+  "main": "lib-old/index.js",
   "scripts": {
-    "inspect": "node --inspect=localhost:9222"
+    "build": "npm run clean && npm run lint && npm run test && npm run compile",
+    "clean": "rm -rf dist",
+    "lint": "tslint -c tslint.json lib/**/*.ts",
+    "test": "echo \"do test\"",
+    "compile": "tsc --build tsconfig.json",
+    "watch": "tsc --watch"
   },
   "keywords": [
     "blessed",
@@ -18,19 +23,24 @@
   ],
   "author": {
     "name": "Maksim Ovcharik",
-    "email": "<maksim.ovcharik@gmail.com>"
+    "email": "maksim.ovcharik@gmail.com"
   },
   "license": "MIT",
   "dependencies": {
-    "css": "^2.2.1"
+    "css": "^2.2.4"
   },
   "peerDependencies": {
     "blessed": "^0.1.81"
   },
   "devDependencies": {
+    "@types/blessed": "^0.1.10",
+    "@types/css": "0.0.31",
+    "@types/node": "^10.9.4",
     "blessed": "^0.1.81",
-    "less": "^2.7.2",
-    "less-plugin-lists": "^1.1.1",
-    "lodash": "^4.17.5"
+    "less": "^3.8.1",
+    "less-plugin-lists": "^1.1.2",
+    "lodash": "^4.17.11",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.3"
   }
 }

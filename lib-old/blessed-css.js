@@ -6,14 +6,18 @@ class BlessedCss {
   static get events() {
     return [
       // structure
-      { event: 'adopt'    , patch: { event: 'adopt'    , type: 'children' } },
-      { event: 'remove'   , patch: { event: 'remove'   , type: 'children' } },
-      { event: 'reparent' , patch: { event: 'reparent' , type: 'node'     } },
+      { event: 'adopt'    , patch: { type: 'children' } },
+      { event: 'remove'   , patch: { type: 'children' } },
+      { event: 'reparent' , patch: { type: 'node'     } },
+
       // input
-      { event: 'mouseover', patch: { event: 'mouseover', type: 'hover', value: true  } },
-      { event: 'mouseout' , patch: { event: 'mouseout' , type: 'hover', value: false } },
-      { event: 'focus'    , patch: { event: 'focus'    , type: 'focus', value: true  } },
-      { event: 'blur'     , patch: { event: 'blur'     , type: 'focus', value: false } },
+      { event: 'mouseover', patch: { type: 'hover', value: true  } },
+      { event: 'mouseout' , patch: { type: 'hover', value: false } },
+      { event: 'focus'    , patch: { type: 'focus', value: true  } },
+      { event: 'blur'     , patch: { type: 'focus', value: false } },
+
+      // list
+      { event: 'select item', patch: { type: 'node' } },
     ];
   }
 
