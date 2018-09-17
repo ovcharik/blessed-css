@@ -1,6 +1,7 @@
 import { Widgets } from "blessed";
 
 import BlessedCss from "./blessed-css";
+import lens from "./utils/lens";
 
 export default class {
   private static cache = new WeakMap<Widgets.Screen, BlessedCss>();
