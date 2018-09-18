@@ -1,7 +1,7 @@
 import { Rule as CssRule } from "css";
-
 import Selector from "./selector";
 import Property from "./property";
+import NodeStyle from "./node-style";
 
 export default class Rule {
   public readonly selectors: Selector[];
@@ -17,7 +17,7 @@ export default class Rule {
     this.properties = Property.flatSortUniq(groups);
   }
 
-  public getProperties(nodeStyle: any): Property[] {
+  public getProperties(nodeStyle: NodeStyle): Property[] {
     const selectors = this.selectors.filter((x) => x.match(nodeStyle));
     if (!selectors.length) {
       return [];

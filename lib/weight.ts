@@ -1,11 +1,6 @@
 import { Position as CssPosition } from "css";
-
 import Property from "./property";
-import Selector from "./selector";
-import {
-  ComplexSelectorData,
-  PartlySelectorData,
-} from "./utils/selector-parser";
+import Selector, { SelectorBasicData, SelectorPartData } from "./selector";
 
 export type WeightValue = [number, number, number, number, number];
 
@@ -24,10 +19,10 @@ export default class Weight {
 
     const complexSelectors = selector.components.filter(
       ({ type }) => type === "selector",
-    ) as ComplexSelectorData[];
+    ) as SelectorPartData[];
 
     const weight = complexSelectors
-      .reduce<PartlySelectorData[]>((acc, { value }) => [...acc, ...value], [])
+      .reduce<SelectorBasicData[]>((acc, { value }) => [...acc, ...value], [])
       .reduce<WeightValue>((acc, { type }) => {
         acc[map[type]] += 1;
         return acc;
@@ -41,7 +36,7 @@ export default class Weight {
     return new Weight(value, property.position);
   }
 
-  constructor(
+  private constructor(
     public readonly value: WeightValue = Weight.zeroValue,
     public readonly position: CssPosition,
   ) {}
@@ -61,6 +56,7 @@ export default class Weight {
         return acc;
       }, Weight.zeroValue)
       .find((v) => v !== 0);
+
     if (result) {
       return result;
     }

@@ -4,12 +4,12 @@ const memoizeStorage = new WeakMap();
  * Memoize decorator for methods and get properties of class.
  *
  * @export
- * @param {(...args: any[]) => any} [resolver] The function to resolve cache key
- * @param {(object | WeakMap<object, any>)} [storage=new Object(null)] Cache storage
+ * @param {(ctx: any, ...args: any[]) => any} [resolver] The function to resolve cache key
+ * @param {boolean} [useWeakMap=false] Use WeakMap for cache storage
  * @returns {MethodDecorator}
  */
 export function memoize(
-  resolver?: (...args: any[]) => any,
+  resolver?: (ctx: any, ...args: any[]) => any,
   useWeakMap: boolean = false,
 ): MethodDecorator {
   return (
@@ -46,8 +46,10 @@ export function memoize(
       : targetStorage;
 
     // override descriptor
-    descriptor[property] = (...args: any[]) => {
-      const cacheKey = resolver ? resolver(...args) : propertyKey;
+    // tslint:disable-next-line:only-arrow-functions
+    descriptor[property] = function(...args: any[]) {
+      const context = this;
+      const cacheKey = resolver ? resolver(context, ...args) : propertyKey;
 
       if (useWeakMap) {
         if (!propertyStorage.has(cacheKey)) {

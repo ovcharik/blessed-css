@@ -1,7 +1,7 @@
 const PropertyParser = require('../lib-old/utils/property-parser');
 
 const blessed = require('blessed');
-const blessedCss = require('../dist');
+const blessedCss = require('../dist').default;
 
 const css = `
   #body {

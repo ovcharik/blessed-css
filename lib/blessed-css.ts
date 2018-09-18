@@ -1,7 +1,6 @@
 import { Widgets } from "blessed";
-
 import Stylesheet from "./stylesheet";
-import { memoize } from "./utils/decorators";
+import NodeStyle from "./node-style";
 
 export default class BlessedCss {
 
@@ -21,6 +20,9 @@ export default class BlessedCss {
   }
 
   public detach() {
+  }
+
+  public render(node: NodeStyle) {
   }
 
 }

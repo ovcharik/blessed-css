@@ -1,18 +1,14 @@
 import { Declaration as CssDeclaration, Position as CssPosition } from "css";
-
 import Weight from "./weight";
-
+import Selector from "./selector";
+import { memoize } from "./utils/memoize";
 import { propertyDefaults, propertyParser } from "./utils/property-parser";
 import {
   PropertyValue,
   PropertyType,
   PropertyApply,
   PropertyData,
-  PropertyName,
 } from "./utils/property-meta-base";
-
-import { memoize } from "./utils/decorators";
-import Selector from "./selector";
 
 export default class Property implements PropertyData {
   @memoize()
@@ -20,7 +16,7 @@ export default class Property implements PropertyData {
     return propertyDefaults.map((x) => new Property(x));
   }
 
-  @memoize((x) => x, true)
+  @memoize((ctx, x) => x, true)
   public static parse(declaration: CssDeclaration): Property[] {
     const { property, value, position } = declaration;
     if (!property) {
@@ -55,7 +51,7 @@ export default class Property implements PropertyData {
 
   public readonly position: CssPosition;
 
-  public readonly name: PropertyName;
+  public readonly name: string;
   public readonly value: PropertyValue;
   public readonly type: PropertyType;
   public readonly apply: PropertyApply;
@@ -67,12 +63,12 @@ export default class Property implements PropertyData {
 
   public weight: Weight;
 
-  constructor(public readonly data: PropertyData) {
+  private constructor(public readonly data: PropertyData) {
     this.position = data.position;
 
     this.name = data.name;
-    this.type = data.type;
     this.value = data.value;
+    this.type = data.type;
     this.apply = data.apply;
 
     this.isImportant = data.isImportant;

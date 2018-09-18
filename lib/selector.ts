@@ -1,15 +1,26 @@
 import Weight from "./weight";
+import NodeStyle from "./node-style";
+import { selectorParser } from "./utils/selector-parser";
+import { SelectorBasicData, SelectorBasicType } from "./utils/selector-meta-basic";
 import {
-  selectorParser,
-  SelectorData,
-  PartlySelectorData,
-} from "./utils/selector-parser";
+  SelectorComplexData,
+  SelectorPartData,
+  SelectorCombinatorData,
+} from "./utils/selector-meta-complex";
 
 interface SelectorCheckOptions {
   method: "checkConditions" | "findNodeReverse";
-  conditions?: PartlySelectorData[];
+  conditions?: SelectorBasicData[];
   combinator?: string;
 }
+
+export {
+  SelectorBasicType,
+  SelectorBasicData,
+  SelectorPartData,
+  SelectorCombinatorData,
+  SelectorComplexData,
+};
 
 export default class Selector {
   public static parse(selector: string): Selector {
@@ -21,7 +32,7 @@ export default class Selector {
 
   private reverseChecks: SelectorCheckOptions[];
 
-  constructor(public readonly components: SelectorData[]) {
+  private constructor(public readonly components: SelectorComplexData[]) {
     this.weight = Weight.createFromSelector(this);
 
     this.reverseChecks = this.components
@@ -41,21 +52,22 @@ export default class Selector {
       .reverse();
   }
 
-  public match(nodeStyle: any): boolean {
+  public match(nodeStyle: NodeStyle): boolean {
     let current = nodeStyle;
     for (const checkOptions of this.reverseChecks) {
-      const result = this[checkOptions.method](current, checkOptions);
+      const method = checkOptions.method;
+      const result = this[method](current, checkOptions);
       if (!result) {
         return false;
       }
-      if (checkOptions.method === "findNodeReverse") {
-        current = result;
+      if (method === "findNodeReverse") {
+        current = result as NodeStyle;
       }
     }
     return true;
   }
 
-  private findNodeReverse(nodeStyle: any, options: SelectorCheckOptions) {
+  private findNodeReverse(nodeStyle: NodeStyle, options: SelectorCheckOptions) {
     // config
     let direction: string;
     let repeat: boolean;
@@ -92,17 +104,17 @@ export default class Selector {
     // search first suitable node
     let current = nodeStyle;
     do {
-      current = direction === "left" ? current.leftStyle : current.parentStyle;
+      current = direction === "left" ? current.lStyle : current.pStyle;
       if (current && this.checkConditions(current, options)) {
         return current;
       }
     } while (current && repeat);
 
     // not found
-    return null;
+    return void 0;
   }
 
-  private checkConditions(nodeStyle: any, options: SelectorCheckOptions) {
+  private checkConditions(nodeStyle: NodeStyle, options: SelectorCheckOptions) {
     if (!options.conditions) {
       return false;
     }
@@ -116,16 +128,17 @@ export default class Selector {
       return false;
     }
 
-    // Check every partly selector
-    const result = options.conditions.every(({ type, value, checker }) => {
+    // Check every basic selector
+    const result = options.conditions.every(({ type, value, test }) => {
       if (type === "node" && value === "*") {
         return true;
       }
-      const args = selector[type] && selector[type][value];
+      const data = selector[type];
+      const args = data && data[value];
       if (!args) {
         return false;
       }
-      return checker ? checker(nodeStyle, ...args) : true;
+      return test ? test(...args) : true;
     });
 
     return result;
