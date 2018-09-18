@@ -1,6 +1,5 @@
 import { colors } from "blessed";
-
-import { PropertyName, PropertyValue, getPropertyType } from "./property-meta-base";
+import { PropertyValue, getPropertyType } from "./property-meta-base";
 
 const types: {
   [key: string]: {
@@ -42,10 +41,10 @@ const types: {
   },
 };
 
-export const testValueType = (prop: PropertyName, value: string) => {
-  return types[getPropertyType(prop)].test(value);
+export const testValueType = (property: string, value: string) => {
+  return types[getPropertyType(property)].test(value);
 };
 
-export const castValueType = (prop: PropertyName, value: string) => {
-  return types[getPropertyType(prop)].cast(value);
+export const castValueType = (property: string, value: string) => {
+  return types[getPropertyType(property)].cast(value);
 };

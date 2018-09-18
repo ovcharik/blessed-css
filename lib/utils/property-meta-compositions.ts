@@ -1,13 +1,11 @@
-import { PropertyName } from "./property-meta-base";
 import { testValueType } from "./property-meta-types";
 
 type CompositionMethod = "match" | "alloc";
 type CompositionSuffix = [string, boolean?];
-type CompositionPair = [PropertyName, string];
+type CompositionPair = [string, string];
 type CompositionPairs = CompositionPair[];
-
 type CompositionsTableRow = [
-  PropertyName,
+  string,
   CompositionMethod,
   ...CompositionSuffix[]
 ];
@@ -20,7 +18,7 @@ const compositionsTable: CompositionsTableRow[] = [
 ];
 
 const compileComposition = (
-  base: PropertyName,
+  base: string,
   method: CompositionMethod,
   // tslint:disable-next-line:trailing-comma
   ...suffixes: CompositionSuffix[]

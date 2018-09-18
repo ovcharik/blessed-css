@@ -1,6 +1,5 @@
 import { Position as CssPosition } from "css";
-
-export type PropertyName = string;
+import { Widgets } from "blessed";
 
 export type PropertyValue =
   | null
@@ -25,12 +24,15 @@ export type PropertyType =
   | "number"
   | "valign";
 
-export type PropertyApply = (node: any, value?: PropertyValue) => void;
+export type PropertyApply = (
+  node: Widgets.BlessedElement,
+  value?: PropertyValue,
+) => void;
 
 export interface PropertyData {
   position: CssPosition;
 
-  name: PropertyName;
+  name: string;
   value: PropertyValue;
   type: PropertyType;
   apply: PropertyApply;
@@ -46,8 +48,8 @@ const applyByPath = (path: string): PropertyApply => {
   const head = steps.slice(0, -1);
   const tail = steps.slice(-1)[0];
 
-  return (node: any, value?: PropertyValue) => {
-    let current = node;
+  return (node: Widgets.BlessedElement, value?: PropertyValue) => {
+    let current: any = node;
     for (const step of head) {
       if (!current[step]) {
         current[step] = {};
@@ -58,12 +60,7 @@ const applyByPath = (path: string): PropertyApply => {
   };
 };
 
-type PropertiesTableRow = [
-  PropertyName,
-  PropertyApply,
-  PropertyType,
-  PropertyValue
-];
+type PropertiesTableRow = [string, PropertyApply, PropertyType, PropertyValue];
 
 const propertiesTable: PropertiesTableRow[] = [
   ["bold", applyByPath("style.bold"), "boolean", undefined],

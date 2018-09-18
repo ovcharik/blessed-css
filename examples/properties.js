@@ -1,8 +1,3 @@
-const PropertyParser = require('../lib-old/utils/property-parser');
-
-const blessed = require('blessed');
-const blessedCss = require('../dist');
-
 const css = `
   #body {
     background: black;
@@ -46,7 +41,10 @@ const css = `
   }
 `;
 
+const PropertyParser = require('../lib-old/utils/property-parser');
 
+const blessed = require('blessed');
+const blessedCss = require('../dist').default;
 
 const screen = blessed.screen();
 blessedCss.attach(screen, css);

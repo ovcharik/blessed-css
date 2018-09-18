@@ -9,13 +9,13 @@ const treeLess = `
 
   // Generate backgrounds: .bg-black, .bg-white, ...
   @colors: black, white, red, green, blue, yellow, magenta;
-  .for-each (@color in @colors) {
-    .bg-@{color} { background: @color; }
-    .bg-h-@{color}:hover { background: @color; }
+  each(@colors, {
+    .bg-@{value} { background: @value; }
+    .bg-h-@{value}:hover { background: @value; }
 
-    .fg-@{color} { color: @color; }
-    .fg-h-@{color}:hover { color: @color; }
-  }
+    .fg-@{value} { value: @value; }
+    .fg-h-@{value}:hover { value: @value; }
+  })
 
   // Line with 3 items
   .line-3 {
@@ -63,13 +63,12 @@ const treeJson = {
 
 
 const less = require('less');
-const lessLists = require('less-plugin-lists');
 
 const blessed = require('blessed');
 const blessedCss = require('..');
 
 
-less.render(treeLess, { plugins: [new lessLists()] }).then(({ css }) => {
+less.render(treeLess).then(({ css }) => {
   const screen = blessed.screen();
   blessedCss.attach(screen, css);
 
