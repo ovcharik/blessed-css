@@ -1,5 +1,5 @@
-import { Widgets } from "blessed";
-import BlessedCss from "./blessed-css";
+import { widget } from "blessed";
+import { BlessedCssOptions, Dispatcher } from "./blessed-css";
 import Stylesheet from "./stylesheet";
 import NodeState, { NodeStatePatch } from "./node-state";
 import { PseudoArgumentArgs } from "./utils/selector-meta-pseudo";
@@ -10,16 +10,11 @@ import NodeTree from "./node-tree";
 type NodeStyleSelectorParts = Record<string, PseudoArgumentArgs>;
 type NodeStyleSelector = { [T in SelectorBasicType]?: NodeStyleSelectorParts };
 
-export interface NodeStyleOptions {
-  blessedCss: BlessedCss;
-  stylesheet: Stylesheet;
-}
-
 export default class NodeStyle {
   @memoize((ctx, x) => x, true)
   private static get(
-    node: Widgets.Node,
-    options?: NodeStyleOptions,
+    node: widget.Node,
+    options?: BlessedCssOptions,
   ): NodeStyle {
     if (!options) {
       throw new Error("Try getting nodeStyle without options");
@@ -28,15 +23,15 @@ export default class NodeStyle {
   }
 
   // static
-  public static render(node: Widgets.Node, options: NodeStyleOptions) {
+  public static render(node: widget.Node, options: BlessedCssOptions) {
     const nodeStyle = NodeStyle.get(node, options);
     return nodeStyle && nodeStyle.render();
   }
 
   public static commit(
-    node: Widgets.Node,
+    node: widget.Node,
     patch: NodeStatePatch,
-    options: NodeStyleOptions,
+    options: BlessedCssOptions,
   ) {
     const nodeStyle = NodeStyle.get(node, options);
     return nodeStyle && nodeStyle.commit(patch);
@@ -73,18 +68,15 @@ export default class NodeStyle {
   // properties
   private readonly nodeState: NodeState = new NodeState(this);
 
-  private readonly blessedCss: BlessedCss;
-  private readonly stylesheet: Stylesheet;
+  private readonly dispatcher: Dispatcher = this.options.dispatcher;
+  private readonly stylesheet: Stylesheet = this.options.stylesheet;
 
   private isRendering: boolean = false;
 
   constructor(
-    public readonly node: Widgets.Node,
-    public readonly options: NodeStyleOptions,
-  ) {
-    this.blessedCss = options.blessedCss;
-    this.stylesheet = options.stylesheet;
-  }
+    public readonly node: widget.Node,
+    public readonly options: BlessedCssOptions,
+  ) {}
 
   public render(): undefined {
     this.isRendering = true;
@@ -99,7 +91,7 @@ export default class NodeStyle {
     }
     // apply all css properties
     this.stylesheet.getProperties(this).forEach((property) => {
-      property.apply(this.node as Widgets.BlessedElement, property.value);
+      property.apply(this.node as widget.Element, property.value);
     });
     this.nodeState.save();
     this.isRendering = false;
@@ -117,7 +109,7 @@ export default class NodeStyle {
     this.node.children.forEach((node) => {
       NodeStyle.commit(node, { type: "tree" }, this.options);
     });
-    this.blessedCss.render(this);
+    this.dispatcher.emit("invalidated", this);
   }
 
   @memoize((ctx) => ctx.nodeState.value, true)

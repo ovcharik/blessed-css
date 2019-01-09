@@ -21,5 +21,3 @@ export default class Stylesheet {
     return Property.flatSortUniq(groups);
   }
 }
-
-module.exports = Stylesheet;

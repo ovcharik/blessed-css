@@ -28,12 +28,13 @@ type Curry<T, R> = T extends [any, any, any, any]
   ? Curry1<T[0], R>
   : unknown;
 
-const curry = <T extends any[], R>(fn: (...args: T) => R): Curry<T, R> => {
-  const wrap = (...head: any[]) =>
-    head.length >= fn.length
-      ? fn(...(head as T))
-      : (...tail: any[]) => wrap(...head, ...tail);
-  return wrap as Curry<T, R>;
-};
+function curry<T extends any[], R>(fn: (...args: T) => R): Curry<T, R>;
+function curry<T extends any[], R>(fn: (...args: T) => R, ...head: T): Curry<T, R> {
+  const wrap = (...acc: any[]) =>
+    acc.length >= fn.length
+      ? fn(...(acc as T))
+      : (...tail: any[]) => wrap(...acc, ...tail);
+  return wrap(...head) as Curry<T, R>;
+}
 
 export default curry;

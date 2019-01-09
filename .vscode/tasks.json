@@ -2,7 +2,6 @@
     "version": "2.0.0",
     "tasks": [
       {
-        "identifier": "npm:build",
         "type": "npm",
         "script": "build",
         "problemMatcher": [
@@ -15,7 +14,6 @@
         "group": "build"
       },
       {
-        "identifier": "npm:compile",
         "type": "npm",
         "script": "compile",
         "problemMatcher": [
@@ -24,7 +22,6 @@
         "group": "build"
       },
       {
-        "identifier": "shell:compile:silent",
         "label": "shell: compile:silent",
         "type": "shell",
         "command": "${workspaceFolder}/node_modules/.bin/tsc --build tsconfig.json",
@@ -38,7 +35,6 @@
         "group": "build"
       },
       {
-        "identifier": "npm:watch",
         "type": "npm",
         "script": "watch",
         "isBackground": true,
@@ -53,14 +49,12 @@
         "group": "build"
       },
       {
-        "identifier": "npm:clean",
         "type": "npm",
         "script": "clean",
         "problemMatcher": [],
         "group": "none"
       },
       {
-        "identifier": "npm:lint",
         "type": "npm",
         "script": "lint",
         "problemMatcher": [
@@ -72,7 +66,6 @@
         "group": "test"
       },
       {
-        "identifier": "npm:test",
         "type": "npm",
         "script": "test",
         "problemMatcher": []

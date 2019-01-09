@@ -1,5 +1,5 @@
 import { Position as CssPosition } from "css";
-import { Widgets } from "blessed";
+import { widget } from "blessed";
 
 export type PropertyValue =
   | null
@@ -25,7 +25,7 @@ export type PropertyType =
   | "valign";
 
 export type PropertyApply = (
-  node: Widgets.BlessedElement,
+  node: widget.Element,
   value?: PropertyValue,
 ) => void;
 
@@ -48,7 +48,7 @@ const applyByPath = (path: string): PropertyApply => {
   const head = steps.slice(0, -1);
   const tail = steps.slice(-1)[0];
 
-  return (node: Widgets.BlessedElement, value?: PropertyValue) => {
+  return (node: widget.Element, value?: PropertyValue) => {
     let current: any = node;
     for (const step of head) {
       if (!current[step]) {

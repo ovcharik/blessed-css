@@ -1,4 +1,3 @@
-import { Widgets } from "blessed";
 import NodeStyle from "./node-style";
 import NodeTree from "./node-tree";
 import { memoize } from "./utils/memoize";

@@ -7,7 +7,7 @@
       "name": "Debug",
       "program": "${workspaceFolder}/lib/index.ts",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "preLaunchTask": "shell:compile:silent",
+      "preLaunchTask": "shell: compile:silent",
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart"
     }

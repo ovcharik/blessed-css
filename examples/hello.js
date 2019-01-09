@@ -36,7 +36,7 @@ const css = `
 `;
 
 const blessed = require('blessed');
-const blessedCss = require('..');
+const blessedCss = require('../dist').default;
 
 const screen = blessed.screen();
 blessedCss.attach(screen, css);

@@ -13,8 +13,8 @@ const treeLess = `
     .bg-@{value} { background: @value; }
     .bg-h-@{value}:hover { background: @value; }
 
-    .fg-@{value} { value: @value; }
-    .fg-h-@{value}:hover { value: @value; }
+    .fg-@{value} { color: @value; }
+    .fg-h-@{value}:hover { color: @value; }
   })
 
   // Line with 3 items
@@ -65,7 +65,7 @@ const treeJson = {
 const less = require('less');
 
 const blessed = require('blessed');
-const blessedCss = require('..');
+const blessedCss = require('../dist').default;
 
 
 less.render(treeLess).then(({ css }) => {

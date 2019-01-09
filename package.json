@@ -33,7 +33,6 @@
     "blessed": "^0.1.81"
   },
   "devDependencies": {
-    "@types/blessed": "^0.1.10",
     "@types/css": "0.0.31",
     "@types/node": "^10.12.18",
     "blessed": "^0.1.81",

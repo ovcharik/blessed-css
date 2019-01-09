@@ -1,15 +1,9 @@
-import { Widgets } from "blessed";
+import { widget } from "blessed";
 import { memoize } from "./utils/memoize";
-
-interface List extends Widgets.ListElement {
-  selected: number;
-  items: Widgets.Node[];
-  getItemIndex(child: Widgets.Node): number;
-}
 
 export default class NodeTree {
   @memoize((ctx, node) => node, true)
-  public static get(node: Widgets.Node) {
+  public static get(node: widget.Node) {
     return new NodeTree(node);
   }
 
@@ -31,17 +25,18 @@ export default class NodeTree {
   private get $listWrapper() {
     return (
       (this.node.parent &&
-        this.node.parent instanceof Widgets.ListElement &&
-        (this.node.parent as List)) ||
+        this.node.parent instanceof widget.List &&
+        this.node.parent.items &&
+        this.node.parent) ||
       void 0
     );
   }
 
-  public constructor(public readonly node: Widgets.Node) {}
+  public constructor(public readonly node: widget.Node) {}
 
   // Is root node.
   public get isRoot(): boolean {
-    return this.node instanceof Widgets.Screen;
+    return this.node instanceof widget.Screen;
   }
 
   // Parent NodeTree.
@@ -89,7 +84,7 @@ export default class NodeTree {
 
   // Is list element.
   public get isList(): boolean {
-    return this.node instanceof Widgets.ListElement;
+    return this.node instanceof widget.List;
   }
 
   // Is item of list.
@@ -122,7 +117,9 @@ export default class NodeTree {
 
   // Array of self items. Return `undefined` if node is not the list.
   public get listItems(): NodeTree[] | undefined {
-    return this.isList ? (this.node as List).items.map(NodeTree.get) : void 0;
+    return this.isList
+      ? (this.node as widget.List).items.map(NodeTree.get)
+      : void 0;
   }
 
   // Array of children.

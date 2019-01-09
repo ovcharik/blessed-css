@@ -53,14 +53,14 @@ export function memoize(
 
       if (useWeakMap) {
         if (!propertyStorage.has(cacheKey)) {
-          const result = executor.apply(target, args);
+          const result = executor.apply(context, args);
           propertyStorage.set(cacheKey, result);
         }
         return propertyStorage.get(cacheKey);
       }
 
       if (!propertyStorage.hasOwnProperty(cacheKey)) {
-        const result = executor.apply(target, args);
+        const result = executor.apply(context, args);
         propertyStorage[cacheKey] = result;
       }
       return propertyStorage[cacheKey];

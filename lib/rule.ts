@@ -8,11 +8,8 @@ export default class Rule {
   public readonly properties: Property[];
 
   constructor(public readonly data: CssRule) {
-    const defaultRule = { selectors: [], declarations: [] };
-    const { selectors, declarations } = Object.assign(defaultRule, data);
-
+    const { selectors = [], declarations = [] } = data;
     this.selectors = selectors.map((x) => Selector.parse(x));
-
     const groups = declarations.map((x) => Property.parse(x));
     this.properties = Property.flatSortUniq(groups);
   }
@@ -30,5 +27,3 @@ export default class Rule {
     return this.properties.map((x) => Property.extract(x, selector));
   }
 }
-
-module.exports = Rule;
