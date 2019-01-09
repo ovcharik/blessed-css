@@ -1,6 +1,5 @@
 import { Widgets } from "blessed";
 import { memoize } from "./utils/memoize";
-import NodeStyle from "./node-style";
 
 interface List extends Widgets.ListElement {
   selected: number;
