@@ -6,7 +6,7 @@ import { propertyDefaults, propertyParser } from "./utils/property-parser";
 import {
   PropertyValue,
   PropertyType,
-  PropertyApply,
+  PropertyAccessors,
   PropertyData,
 } from "./utils/property-meta-base";
 
@@ -54,7 +54,9 @@ export default class Property implements PropertyData {
   public readonly name: string;
   public readonly value: PropertyValue;
   public readonly type: PropertyType;
-  public readonly apply: PropertyApply;
+
+  public readonly get: ReturnType<PropertyAccessors>;
+  public readonly set: ReturnType<PropertyAccessors>;
 
   public readonly isImportant: boolean;
   public readonly isKnown: boolean;
@@ -69,7 +71,9 @@ export default class Property implements PropertyData {
     this.name = data.name;
     this.value = data.value;
     this.type = data.type;
-    this.apply = data.apply;
+
+    this.get = data.get;
+    this.set = data.set;
 
     this.isImportant = data.isImportant;
     this.isKnown = data.isKnown;

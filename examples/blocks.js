@@ -65,7 +65,7 @@ const treeJson = {
 const less = require('less');
 
 const blessed = require('blessed');
-const blessedCss = require('../dist').default;
+const blessedCss = require('..');
 
 
 less.render(treeLess).then(({ css }) => {

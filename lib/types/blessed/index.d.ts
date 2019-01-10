@@ -57,9 +57,13 @@ declare module "blessed" {
 
     class Screen extends Node implements Renderable {
       public render(): void;
+
       public enableMouse(el: Element): void;
       public enableKeys(el: Element): void;
       public enableInput(el: Element): void;
+
+      public clickable: boolean;
+      public keyable: boolean;
     }
 
     // Element
@@ -67,9 +71,13 @@ declare module "blessed" {
 
     class Element extends Node implements Renderable {
       public render(): void;
+
       public enableMouse(): void;
       public enableKeys(): void;
       public enableInput(): void;
+
+      public clickable: boolean;
+      public keyable: boolean;
     }
 
     // Box

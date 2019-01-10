@@ -5,7 +5,6 @@ const css = `
     height: 100%;
   }
 
-
   #menu {
     background: white;
     width: 25;
@@ -32,7 +31,6 @@ const css = `
     color: white !important;
   }
 
-
   #content {
     background: gray;
     width: 100%-26;
@@ -41,32 +39,29 @@ const css = `
   }
 `;
 
-const PropertyParser = require('../lib-old/utils/property-parser');
+const { propertyDefaults } = require("../dist/utils/property-parser");
 
-const blessed = require('blessed');
-const blessedCss = require('../dist').default;
+const blessed = require("blessed");
+const blessedCss = require("..");
 
 const screen = blessed.screen();
 blessedCss.attach(screen, css);
 
 const body = blessed.element({
   parent: screen,
-  id: 'body'
+  id: "body",
 });
 
 const menu = blessed.list({
   parent: body,
-  id: 'menu',
-  items: PropertyParser.data.properties.map(p => p[0]),
+  id: "menu",
+  items: propertyDefaults.map(x => x.name),
   mouse: true,
   keys: true,
-  label: 'MENU',
+  label: "MENU",
 });
 
-const content = blessed.box({ parent: body, id: 'content' });
+const content = blessed.box({ parent: body, id: "content" });
 
-console.log(content);
-console.log(blessedCss);
-
-screen.key(['escape', 'q', 'C-c'], () => process.exit(0));
+screen.key(["escape", "q", "C-c"], () => process.exit(0));
 screen.render();

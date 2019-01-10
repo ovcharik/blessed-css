@@ -1,7 +1,7 @@
 import { Position as CssPosition } from "css";
 
-import { PropertyData } from "./property-meta-base";
-import { getPropertyType, getPropertyApply } from "./property-meta-base";
+import { PropertyData, getPropertyAccessors } from "./property-meta-base";
+import { getPropertyType } from "./property-meta-base";
 import { getPropertyPairs } from "./property-meta-compositions";
 import { castValueType, testValueType } from "./property-meta-types";
 
@@ -20,13 +20,17 @@ export const propertyParser = (
   return getPropertyPairs(property, val)
     .filter(Boolean)
     .map(([p, v]) => {
+      const accessors = getPropertyAccessors(p);
+
       return {
         position,
 
         name: p,
         value: castValueType(p, v),
         type: getPropertyType(p),
-        apply: getPropertyApply(p),
+
+        get: accessors(true),
+        set: accessors(false),
 
         isImportant: Boolean(important),
         isKnown: Boolean(getPropertyType(p)),

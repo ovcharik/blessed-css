@@ -17,7 +17,7 @@ const types: {
   },
   color: {
     cast: (v: string) => v,
-    test: (v: string) => (colors as any).convert(v) !== 0x1ff,
+    test: (v: string) => colors.convert(v) !== 0x1ff,
   },
   dimension: {
     cast: (v: string) => (types.number.test(v) ? Number(v) : v),

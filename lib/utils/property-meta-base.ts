@@ -24,10 +24,9 @@ export type PropertyType =
   | "number"
   | "valign";
 
-export type PropertyApply = (
-  node: widget.Element,
-  value?: PropertyValue,
-) => void;
+export type PropertyAccessors = (
+  get?: boolean,
+) => (node: widget.Element, value?: PropertyValue) => PropertyValue;
 
 export interface PropertyData {
   position: CssPosition;
@@ -35,7 +34,9 @@ export interface PropertyData {
   name: string;
   value: PropertyValue;
   type: PropertyType;
-  apply: PropertyApply;
+
+  set: ReturnType<PropertyAccessors>;
+  get: ReturnType<PropertyAccessors>;
 
   isImportant: boolean;
   isKnown: boolean;
@@ -43,12 +44,12 @@ export interface PropertyData {
   isDefault: boolean;
 }
 
-const applyByPath = (path: string): PropertyApply => {
+const accessByPath = (path: string): PropertyAccessors => {
   const steps = path.split(".");
   const head = steps.slice(0, -1);
   const tail = steps.slice(-1)[0];
 
-  return (node: widget.Element, value?: PropertyValue) => {
+  return (get = false) => (node: widget.Element, value?: PropertyValue) => {
     let current: any = node;
     for (const step of head) {
       if (!current[step]) {
@@ -56,58 +57,74 @@ const applyByPath = (path: string): PropertyApply => {
       }
       current = current[step];
     }
-    current[tail] = value;
+    return get ? current[tail] : (current[tail] = value);
   };
 };
 
-type PropertiesTableRow = [string, PropertyApply, PropertyType, PropertyValue];
+const accessByFn = (fn: string, prop: string): PropertyAccessors => {
+  return (get = false) => (node: widget.Element, value?: PropertyValue) => {
+    if (!get) {
+      (node as any)[fn]();
+    }
+    return (node as any)[prop];
+  };
+};
+
+type PropertiesTableRow = [
+  string,
+  PropertyAccessors,
+  PropertyType,
+  PropertyValue
+];
 
 const propertiesTable: PropertiesTableRow[] = [
-  ["bold", applyByPath("style.bold"), "boolean", undefined],
-  ["underline", applyByPath("style.underline"), "boolean", undefined],
-  ["blink", applyByPath("style.blink"), "boolean", undefined],
-  ["inverse", applyByPath("style.inverse"), "boolean", undefined],
-  ["invisible", applyByPath("style.invisible"), "boolean", undefined],
-  ["transparent", applyByPath("style.transparent"), "boolean", undefined],
-  ["color", applyByPath("style.fg"), "color", undefined],
+  ["bold", accessByPath("style.bold"), "boolean", undefined],
+  ["underline", accessByPath("style.underline"), "boolean", undefined],
+  ["blink", accessByPath("style.blink"), "boolean", undefined],
+  ["inverse", accessByPath("style.inverse"), "boolean", undefined],
+  ["invisible", accessByPath("style.invisible"), "boolean", undefined],
+  ["transparent", accessByPath("style.transparent"), "boolean", undefined],
+  ["color", accessByPath("style.fg"), "color", undefined],
 
-  ["background-fill", applyByPath("ch"), "char", " "],
-  ["background-color", applyByPath("style.bg"), "color", undefined],
+  ["background-fill", accessByPath("ch"), "char", " "],
+  ["background-color", accessByPath("style.bg"), "color", undefined],
 
-  ["border-background", applyByPath("style.border.bg"), "color", null],
-  ["border-color", applyByPath("style.border.fg"), "color", null],
-  ["border-fill", applyByPath("border.ch"), "char", null],
-  ["border-top", applyByPath("border.top"), "boolean", null],
-  ["border-right", applyByPath("border.right"), "boolean", null],
-  ["border-bottom", applyByPath("border.bottom"), "boolean", null],
-  ["border-left", applyByPath("border.left"), "boolean", null],
+  ["border-background", accessByPath("style.border.bg"), "color", null],
+  ["border-color", accessByPath("style.border.fg"), "color", null],
+  ["border-fill", accessByPath("border.ch"), "char", null],
+  ["border-top", accessByPath("border.top"), "boolean", null],
+  ["border-right", accessByPath("border.right"), "boolean", null],
+  ["border-bottom", accessByPath("border.bottom"), "boolean", null],
+  ["border-left", accessByPath("border.left"), "boolean", null],
 
-  ["padding-top", applyByPath("padding.top"), "number", 0],
-  ["padding-right", applyByPath("padding.right"), "number", 0],
-  ["padding-bottom", applyByPath("padding.bottom"), "number", 0],
-  ["padding-left", applyByPath("padding.left"), "number", 0],
+  ["padding-top", accessByPath("padding.top"), "number", 0],
+  ["padding-right", accessByPath("padding.right"), "number", 0],
+  ["padding-bottom", accessByPath("padding.bottom"), "number", 0],
+  ["padding-left", accessByPath("padding.left"), "number", 0],
 
-  ["width", applyByPath("position.width"), "dimension", undefined],
-  ["height", applyByPath("position.height"), "dimension", undefined],
-  ["top", applyByPath("position.top"), "dimension", undefined],
-  ["right", applyByPath("position.right"), "dimension", undefined],
-  ["bottom", applyByPath("position.bottom"), "dimension", undefined],
-  ["left", applyByPath("position.left"), "dimension", undefined],
+  ["width", accessByPath("position.width"), "dimension", undefined],
+  ["height", accessByPath("position.height"), "dimension", undefined],
+  ["top", accessByPath("position.top"), "dimension", undefined],
+  ["right", accessByPath("position.right"), "dimension", undefined],
+  ["bottom", accessByPath("position.bottom"), "dimension", undefined],
+  ["left", accessByPath("position.left"), "dimension", undefined],
 
-  ["align", applyByPath("align"), "halign", "left"],
-  ["vertical-align", applyByPath("valign"), "valign", "top"],
+  ["align", accessByPath("align"), "halign", "left"],
+  ["vertical-align", accessByPath("valign"), "valign", "top"],
 
-  ["shadow", applyByPath("shadow"), "boolean", undefined],
-  ["hidden", applyByPath("hidden"), "boolean", false],
-  ["shrink", applyByPath("shrink"), "boolean", undefined],
-  ["draggable", applyByPath("draggable"), "boolean", null],
+  ["shadow", accessByPath("shadow"), "boolean", undefined],
+  ["hidden", accessByPath("hidden"), "boolean", false],
+  ["shrink", accessByPath("shrink"), "boolean", undefined],
+  ["draggable", accessByPath("draggable"), "boolean", null],
 
-  ["mouseable", (node) => node.enableMouse(), "boolean", null],
-  ["keyable", (node) => node.enableKeys(), "boolean", null],
+  ["mouseable", accessByFn("enableMouse", "clickable"), "boolean", null],
+  ["keyable", accessByFn("enableKeys", "keyable"), "boolean", null],
 ];
 
 // helpers
-const tableReducer = <T extends PropertyValue | PropertyType | PropertyApply>(
+const tableReducer = <
+  T extends PropertyValue | PropertyType | PropertyAccessors
+>(
   i: number,
 ) => {
   return (
@@ -119,31 +136,34 @@ const tableReducer = <T extends PropertyValue | PropertyType | PropertyApply>(
   };
 };
 
-const reduce = <T extends PropertyValue | PropertyType | PropertyApply>(
+const reduce = <T extends PropertyValue | PropertyType | PropertyAccessors>(
   i: number,
 ) => {
   const reducer = tableReducer<T>(i);
   return propertiesTable.reduce<{ [key: string]: T }>(reducer, {});
 };
 
-const propToApplyMap = reduce<PropertyApply>(1);
+const propToAccessorsMap = reduce<PropertyAccessors>(1);
 const propToTypeMap = reduce<PropertyType>(2);
 const propToDefaultMap = reduce<PropertyValue>(3);
 
-export const getPropertyApply = (property: string) => propToApplyMap[property];
+export const getPropertyAccessors = (property: string) =>
+  propToAccessorsMap[property];
 export const getPropertyType = (property: string) => propToTypeMap[property];
 export const getPropertyDefault = (property: string) =>
   propToDefaultMap[property];
 
 export const propertyDefaults: PropertyData[] = propertiesTable.map(
-  ([p, a, t, d]) => {
+  ([name, accessors, type, value]) => {
     return {
       position: { column: 0, line: 0 },
 
-      name: p,
-      value: d,
-      type: t,
-      apply: a,
+      name,
+      value,
+      type,
+
+      get: accessors(true),
+      set: accessors(false),
 
       isImportant: false,
       isKnown: true,

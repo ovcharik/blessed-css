@@ -91,7 +91,7 @@ export default class NodeStyle {
     }
     // apply all css properties
     this.stylesheet.getProperties(this).forEach((property) => {
-      property.apply(this.node as widget.Element, property.value);
+      property.set(this.node as widget.Element, property.value);
     });
     this.nodeState.save();
     this.isRendering = false;

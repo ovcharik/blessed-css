@@ -1,19 +1,22 @@
 import { widget } from "blessed";
 import BlessedCss from "./blessed-css";
 
-export default class {
-  private static cache = new WeakMap<widget.Screen, BlessedCss>();
+const cache = new WeakMap<widget.Screen, BlessedCss>();
 
-  public static attach(screen: widget.Screen, css: string) {
-    if (this.cache.has(screen)) { return; }
-    this.cache.set(screen, new BlessedCss(screen, css));
+export function attach(screen: widget.Screen, css: string) {
+    if (cache.has(screen)) { return; }
+    cache.set(screen, new BlessedCss(screen, css));
   }
 
-  public static detach(screen: widget.Screen) {
-    if (this.cache.has(screen)) { return; }
-    const blessedCss = this.cache.get(screen);
-    if (!blessedCss) { return; }
-    blessedCss.detach();
-    this.cache.delete(screen);
-  }
+export function detach(screen: widget.Screen) {
+  if (cache.has(screen)) { return; }
+  const blessedCss = cache.get(screen);
+  if (!blessedCss) { return; }
+  blessedCss.detach();
+  cache.delete(screen);
 }
+
+export default {
+  attach,
+  detach,
+};
