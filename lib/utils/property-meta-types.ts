@@ -1,12 +1,17 @@
 import { colors } from "blessed";
-import { PropertyValue, getPropertyType } from "./property-meta-base";
+import {
+  PropertyValue,
+  PropertyType,
+  getPropertyType,
+} from "./property-meta-base";
 
-const types: {
-  [key: string]: {
+const types: Record<
+  PropertyType,
+  {
     cast: (v: string) => PropertyValue;
     test: (v: string) => boolean;
-  };
-} = {
+  }
+> = {
   boolean: {
     cast: (v: string) => Boolean(v),
     test: (v: string) => /^(true|false)$/.test(v),
@@ -22,6 +27,10 @@ const types: {
   dimension: {
     cast: (v: string) => (types.number.test(v) ? Number(v) : v),
     test: (v: string) => /^[-+]?\d+(%(?=[-+]|$))?([-+]?\d+)?$/.test(v),
+  },
+  position: {
+    cast: (v: string) => (types.number.test(v) ? Number(v) : v),
+    test: (v: string) => types.dimension.test(v) || v === "center",
   },
   halign: {
     cast: (v: string) => v,

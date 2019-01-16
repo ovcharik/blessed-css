@@ -50,6 +50,8 @@ declare module "blessed" {
       public children: Node[];
 
       constructor(options: NodeOptions);
+
+      public forDescendants(iterator: (node: Node) => void, self: boolean): void;
     }
 
     // Screen

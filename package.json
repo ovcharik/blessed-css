@@ -36,6 +36,7 @@
     "@types/css": "0.0.31",
     "@types/node": "^10.12.18",
     "blessed": "^0.1.81",
+    "blessed-vue": "^2.0.1",
     "less": "^3.9.0",
     "lodash": "^4.17.11",
     "tslint": "^5.12.0",

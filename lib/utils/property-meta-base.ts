@@ -20,6 +20,7 @@ export type PropertyType =
   | "char"
   | "color"
   | "dimension"
+  | "position"
   | "halign"
   | "number"
   | "valign";
@@ -104,10 +105,10 @@ const propertiesTable: PropertiesTableRow[] = [
 
   ["width", accessByPath("position.width"), "dimension", undefined],
   ["height", accessByPath("position.height"), "dimension", undefined],
-  ["top", accessByPath("position.top"), "dimension", undefined],
-  ["right", accessByPath("position.right"), "dimension", undefined],
-  ["bottom", accessByPath("position.bottom"), "dimension", undefined],
-  ["left", accessByPath("position.left"), "dimension", undefined],
+  ["top", accessByPath("position.top"), "position", undefined],
+  ["right", accessByPath("position.right"), "position", undefined],
+  ["bottom", accessByPath("position.bottom"), "position", undefined],
+  ["left", accessByPath("position.left"), "position", undefined],
 
   ["align", accessByPath("align"), "halign", "left"],
   ["vertical-align", accessByPath("valign"), "valign", "top"],
@@ -147,8 +148,8 @@ const propToAccessorsMap = reduce<PropertyAccessors>(1);
 const propToTypeMap = reduce<PropertyType>(2);
 const propToDefaultMap = reduce<PropertyValue>(3);
 
-export const getPropertyAccessors = (property: string) =>
-  propToAccessorsMap[property];
+export const getPropertyAccessors = (property: string): PropertyAccessors =>
+  propToAccessorsMap[property] || (() => () => void 0);
 export const getPropertyType = (property: string) => propToTypeMap[property];
 export const getPropertyDefault = (property: string) =>
   propToDefaultMap[property];

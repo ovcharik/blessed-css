@@ -44,15 +44,15 @@ export default class NodeStyle {
 
   public get parent(): NodeStyle | undefined {
     const { parent } = this.nodeTree;
-    return parent ? NodeStyle.get(parent.node) : void 0;
+    return parent ? NodeStyle.get(parent.node, this.options) : void 0;
   }
   public get prev(): NodeStyle | undefined {
     const { prev } = this.nodeTree;
-    return prev ? NodeStyle.get(prev.node) : void 0;
+    return prev ? NodeStyle.get(prev.node, this.options) : void 0;
   }
   public get next(): NodeStyle | undefined {
     const { next } = this.nodeTree;
-    return next ? NodeStyle.get(next.node) : void 0;
+    return next ? NodeStyle.get(next.node, this.options) : void 0;
   }
 
   public get nodeId(): string {

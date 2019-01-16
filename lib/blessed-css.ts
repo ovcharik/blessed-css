@@ -81,6 +81,8 @@ export default class BlessedCss {
       on(event, () => NodeStyle.commit(this.screen, patch, this.options));
       on(`element ${event}`, (x) => NodeStyle.commit(x, patch, this.options));
     });
+
+    NodeStyle.commit(this.screen, { type: "tree" }, this.options);
   }
 
   public detach() {

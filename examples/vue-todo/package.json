@@ -1,0 +1,25 @@
+{
+  "name": "vue-todo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf dist/*",
+    "build": "npm run clean && rollup -c rollup.config.js",
+    "watch": "npm run clean && rollup -w -c rollup.config.js",
+    "start": "npm run build && node dist/index.js",
+    "debug": "node --inspect dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "rollup": "^1.1.0",
+    "rollup-plugin-css-only": "^0.4.0",
+    "rollup-plugin-vue": "^4.6.1",
+    "vue-template-compiler": "^2.5.22"
+  },
+  "dependencies": {
+    "blessed-css": "file:../..",
+    "blessed-vue": "^2.0.1"
+  }
+}
