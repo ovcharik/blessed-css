@@ -1,4 +1,5 @@
 import { Position as CssPosition } from "css";
+
 import Property from "./property";
 import Selector, { SelectorBasicData, SelectorPartData } from "./selector";
 

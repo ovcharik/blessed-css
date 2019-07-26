@@ -1,5 +1,6 @@
 import { parse as cssParser } from "css";
-import NodeStyle from "./node-style";
+
+import Node from "./node";
 import Property from "./property";
 import Rule from "./rule";
 
@@ -14,10 +15,8 @@ export default class Stylesheet {
     this.rules = parsed.stylesheet.rules.map(x => new Rule(x));
   }
 
-  public getProperties(nodeStyle: NodeStyle) {
-    const groups = this.rules
-      .map(x => x.getProperties(nodeStyle))
-      .filter(Boolean);
+  public getProperties(node: Node) {
+    const groups = this.rules.map(x => x.getProperties(node)).filter(Boolean);
     return Property.flatSortUniq(groups);
   }
 }

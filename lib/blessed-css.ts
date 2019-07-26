@@ -1,7 +1,7 @@
 import { widget } from "blessed";
+import Stylesheet from "./engine/stylesheet";
 import { NodeStatePatch } from "./node-state";
 import NodeStyle from "./node-style";
-import Stylesheet from "./stylesheet";
 
 export interface Dispatcher {
   emit: (event: "invalidated", source: any) => void;

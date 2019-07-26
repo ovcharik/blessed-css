@@ -1,4 +1,5 @@
 import { widget } from "blessed";
+
 import { memoize } from "./utils/memoize";
 
 export default class NodeTree {

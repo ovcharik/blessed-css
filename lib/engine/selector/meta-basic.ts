@@ -2,7 +2,7 @@ import {
   getPseudoArgumentTest,
   PseudoArgumentTest,
   PseudoName
-} from "./selector-meta-pseudo";
+} from "./meta-pseudo";
 
 export type SelectorBasicType = "id" | "class" | "pseudo" | "node";
 

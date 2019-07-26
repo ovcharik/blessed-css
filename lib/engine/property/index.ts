@@ -1,14 +1,18 @@
 import { Declaration as CssDeclaration, Position as CssPosition } from "css";
-import Selector from "./selector";
-import { memoize } from "./utils/memoize";
+
+import { memoize } from "../../utils/memoize";
+
+import Selector from "../selector";
+import Weight from "../weight";
+
 import {
-  PropertyAccessors,
+  PropertyAccessor,
   PropertyData,
+  PropertyName,
   PropertyType,
   PropertyValue
-} from "./utils/property-meta-base";
-import { propertyDefaults, propertyParser } from "./utils/property-parser";
-import Weight from "./weight";
+} from "./meta-base";
+import { propertyDefaults, propertyParser } from "./parser";
 
 export default class Property implements PropertyData {
   @memoize()
@@ -51,12 +55,12 @@ export default class Property implements PropertyData {
 
   public readonly position: CssPosition;
 
-  public readonly name: string;
+  public readonly name: PropertyName;
   public readonly value: PropertyValue;
   public readonly type: PropertyType;
 
-  public readonly get: ReturnType<PropertyAccessors>;
-  public readonly set: ReturnType<PropertyAccessors>;
+  public readonly get: ReturnType<PropertyAccessor>;
+  public readonly set: ReturnType<PropertyAccessor>;
 
   public readonly isImportant: boolean;
   public readonly isKnown: boolean;

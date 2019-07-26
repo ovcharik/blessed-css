@@ -1,15 +1,20 @@
 import { colors } from "blessed";
+
 import {
   getPropertyType,
+  PropertyName,
   PropertyType,
   PropertyValue
-} from "./property-meta-base";
+} from "./meta-base";
+
+export type PropertyCastValueType = (v: PropertyValue) => PropertyValue;
+export type PropertyTestValueType = (v: PropertyValue) => boolean;
 
 const types: Record<
-  PropertyType,
+  PropertyType | "undefined",
   {
-    cast: (v: string) => PropertyValue;
-    test: (v: string) => boolean;
+    cast: PropertyCastValueType;
+    test: PropertyTestValueType;
   }
 > = {
   boolean: {
@@ -50,10 +55,10 @@ const types: Record<
   }
 };
 
-export const testValueType = (property: string, value: string) => {
+export const testValueType = (property: PropertyName, value: PropertyValue) => {
   return types[getPropertyType(property)].test(value);
 };
 
-export const castValueType = (property: string, value: string) => {
+export const castValueType = (property: PropertyName, value: PropertyValue) => {
   return types[getPropertyType(property)].cast(value);
 };

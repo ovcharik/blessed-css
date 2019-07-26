@@ -1,11 +1,11 @@
 import { Position as CssPosition } from "css";
 
-import { getPropertyAccessors, PropertyData } from "./property-meta-base";
-import { getPropertyType } from "./property-meta-base";
-import { getPropertyPairs } from "./property-meta-compositions";
-import { castValueType, testValueType } from "./property-meta-types";
+import { getPropertyAccessors, PropertyData } from "./meta-base";
+import { getPropertyType } from "./meta-base";
+import { getPropertyPairs } from "./meta-compositions";
+import { castValueType, testValueType } from "./meta-types";
 
-export { propertyDefaults } from "./property-meta-base";
+export { propertyDefaults } from "./meta-base";
 
 export const propertyParser = (
   property: string,

@@ -1,7 +1,8 @@
-import NodeStyle from "./node-style";
-import NodeTree from "./node-tree";
 import { createLensByPath } from "./utils/lens";
 import { memoize } from "./utils/memoize";
+
+import NodeStyle from "./node-style";
+import NodeTree from "./node-tree";
 
 export type NodeStatePatchType =
   | "attrs"

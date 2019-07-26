@@ -1,15 +1,13 @@
-import NodeStyle from "./node-style";
-import {
-  SelectorBasicData,
-  SelectorBasicType
-} from "./utils/selector-meta-basic";
+import Node from "../node";
+import Weight from "../weight";
+
+import { SelectorBasicData, SelectorBasicType } from "./meta-basic";
 import {
   SelectorCombinatorData,
   SelectorComplexData,
   SelectorPartData
-} from "./utils/selector-meta-complex";
-import { selectorParser } from "./utils/selector-parser";
-import Weight from "./weight";
+} from "./meta-complex";
+import { selectorParser } from "./parser";
 
 interface SelectorCheckOptions {
   method: "checkConditions" | "findNodeReverse";
@@ -55,8 +53,8 @@ export default class Selector {
       .reverse();
   }
 
-  public match(nodeStyle: NodeStyle): boolean {
-    let current = nodeStyle;
+  public match(node: Node): boolean {
+    let current = node;
     for (const checkOptions of this.reverseChecks) {
       const method = checkOptions.method;
       const result = this[method](current, checkOptions);
@@ -64,13 +62,13 @@ export default class Selector {
         return false;
       }
       if (method === "findNodeReverse") {
-        current = result as NodeStyle;
+        current = result as Node;
       }
     }
     return true;
   }
 
-  private findNodeReverse(nodeStyle: NodeStyle, options: SelectorCheckOptions) {
+  private findNodeReverse(node: Node, options: SelectorCheckOptions) {
     // config
     let direction: string;
     let repeat: boolean;
@@ -105,7 +103,7 @@ export default class Selector {
     }
 
     // search first suitable node
-    let current: NodeStyle | undefined = nodeStyle;
+    let current: Node | undefined = node;
     do {
       current = direction === "left" ? current.prev : current.parent;
       if (current && this.checkConditions(current, options)) {
@@ -117,16 +115,16 @@ export default class Selector {
     return void 0;
   }
 
-  private checkConditions(nodeStyle: NodeStyle, options: SelectorCheckOptions) {
+  private checkConditions(node: Node, options: SelectorCheckOptions) {
     if (!options.conditions) {
       return false;
     }
 
-    if (!nodeStyle) {
+    if (!node) {
       return false;
     }
 
-    const selector = nodeStyle.selector;
+    const selector = node.selector;
     if (!selector) {
       return false;
     }

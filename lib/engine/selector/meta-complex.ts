@@ -1,4 +1,4 @@
-import { parseBasic, SelectorBasicData } from "./selector-meta-basic";
+import { parseBasic, SelectorBasicData } from "./meta-basic";
 
 export type SelectorPartValue = SelectorBasicData[];
 export interface SelectorPartData {

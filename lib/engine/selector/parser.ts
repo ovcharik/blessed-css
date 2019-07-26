@@ -1,4 +1,4 @@
-import { parseComplex } from "./selector-meta-complex";
+import { parseComplex } from "./meta-complex";
 
 const extractBracketsContent = (selector: string) => {
   const symbols = selector.trim().split("");

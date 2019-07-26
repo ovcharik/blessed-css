@@ -1,10 +1,15 @@
-import { testValueType } from "./property-meta-types";
+import { PropertyName } from "./meta-base";
+import { testValueType } from "./meta-types";
 
 type CompositionMethod = "match" | "alloc";
 type CompositionSuffix = [string, boolean?];
-type CompositionPair = [string, string];
+type CompositionPair = [PropertyName, string];
 type CompositionPairs = CompositionPair[];
 type CompositionsTableRow = [string, CompositionMethod, ...CompositionSuffix[]];
+
+interface CompositionToPairsMap {
+  [key: string]: (values: string[]) => CompositionPairs;
+}
 
 const compositionsTable: CompositionsTableRow[] = [
   ["background", "match", ["&fill", true], ["&color", true]],
@@ -16,7 +21,6 @@ const compositionsTable: CompositionsTableRow[] = [
 const compileComposition = (
   base: string,
   method: CompositionMethod,
-  // tslint:disable-next-line:trailing-comma
   ...suffixes: CompositionSuffix[]
 ): ((values: string[]) => CompositionPairs) => {
   const props = suffixes
@@ -24,7 +28,10 @@ const compileComposition = (
       suf.replace(/\&/g, base + "-"),
       Boolean(opt)
     ])
-    .map(([prop, opt]) => ({ prop, opt }));
+    .map<{ prop: PropertyName; opt: any }>(([prop, opt]) => ({
+      prop: prop as PropertyName,
+      opt
+    }));
 
   // for each value look for a property of a suitable
   // type in the specified order
@@ -70,7 +77,7 @@ const compileComposition = (
       if (count > 4) {
         count = 4;
       }
-      const result = allocation[count].map(
+      const result: CompositionPairs = allocation[count].map(
         (vi, pi) => [props[pi].prop, values[vi]] as CompositionPair
       );
       return result;
@@ -81,12 +88,13 @@ const compileComposition = (
   return (values: string[]) => [];
 };
 
-const compositionToPairsMap = compositionsTable.reduce<{
-  [key: string]: (values: string[]) => CompositionPairs;
-}>((acc, row: CompositionsTableRow) => {
-  acc[row[0]] = compileComposition(...row);
-  return acc;
-}, {});
+const compositionToPairsMap = compositionsTable.reduce<CompositionToPairsMap>(
+  (acc, row: CompositionsTableRow) => {
+    acc[row[0]] = compileComposition(...row);
+    return acc;
+  },
+  {}
+);
 
 export const getPropertyPairs = (
   property: string,
@@ -94,5 +102,5 @@ export const getPropertyPairs = (
 ): CompositionPairs => {
   return compositionToPairsMap.hasOwnProperty(property)
     ? compositionToPairsMap[property](value.split(/\s+/))
-    : [[property, value]];
+    : [[property as PropertyName, value]];
 };

@@ -1,16 +1,17 @@
 import { widget } from "blessed";
+
+import Node, { NodeSelector } from "./engine/node";
+import { SelectorBasicType } from "./engine/selector";
+import { PseudoArgumentArgs } from "./engine/selector/meta-pseudo";
+import Stylesheet from "./engine/stylesheet";
+
+import { memoize } from "./utils/memoize";
+
 import { BlessedCssOptions, Dispatcher } from "./blessed-css";
 import NodeState, { NodeStatePatch } from "./node-state";
 import NodeTree from "./node-tree";
-import { SelectorBasicType } from "./selector";
-import Stylesheet from "./stylesheet";
-import { memoize } from "./utils/memoize";
-import { PseudoArgumentArgs } from "./utils/selector-meta-pseudo";
 
-type NodeStyleSelectorParts = Record<string, PseudoArgumentArgs>;
-type NodeStyleSelector = { [T in SelectorBasicType]?: NodeStyleSelectorParts };
-
-export default class NodeStyle {
+export default class NodeStyle implements Node {
   // getters
   public get nodeTree(): NodeTree {
     return NodeTree.get(this.node);
@@ -40,7 +41,7 @@ export default class NodeStyle {
   }
 
   @memoize(ctx => ctx.nodeState.value, true)
-  public get selector(): NodeStyleSelector {
+  public get selector(): NodeSelector {
     const { attrs, input, tree, children } = this.nodeState.value;
 
     type Part<T> = [SelectorBasicType, T, PseudoArgumentArgs?];
@@ -122,7 +123,7 @@ export default class NodeStyle {
         selector[type] = { ...selector[type], [value]: args };
         return selector;
       },
-      {} as NodeStyleSelector
+      {} as NodeSelector
     );
   }
 
