@@ -1,10 +1,10 @@
 <template>
   <form class="login-form">
-    <box class="form-title" content="Login Form"/>
+    <box class="form-title" content="Login Form" />
 
     <box class="input-row" :top="3">
       <text>Username:</text>
-      <textbox ref="username" :width="30" :length="10" :value="username" @submit="submitUsername"/>
+      <textbox ref="username" :width="30" :length="10" :value="username" @submit="submitUsername" />
     </box>
 
     <box class="input-row" :top="5">
@@ -26,9 +26,9 @@
       text="remember me"
     />
 
-    <button content="Login" :class="{ submitting: submitting }" @press="login"/>
+    <button content="Login" :class="{ submitting: submitting }" @press="login" />
 
-    <message ref="message"/>
+    <message ref="message" />
   </form>
 </template>
 
@@ -56,9 +56,7 @@ export default {
     login() {
       this.submitting = true;
       this.$refs.message.log(
-        `Logging in. Username: ${this.username}, password: ${
-          this.password
-        }, rememberMe: ${this.rememberMe}`,
+        `Logging in. Username: ${this.username}, password: ${this.password}, rememberMe: ${this.rememberMe}`,
         3,
         () => {
           this.$refs.message.log("Logged in", 1, () => {

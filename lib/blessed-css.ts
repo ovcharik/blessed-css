@@ -1,7 +1,7 @@
 import { widget } from "blessed";
-import Stylesheet from "./stylesheet";
-import NodeStyle from "./node-style";
 import { NodeStatePatch } from "./node-state";
+import NodeStyle from "./node-style";
+import Stylesheet from "./stylesheet";
 
 export interface Dispatcher {
   emit: (event: "invalidated", source: any) => void;
@@ -34,10 +34,10 @@ export default class BlessedCss {
   private dispatcher: Dispatcher = {
     emit: (event, source) => {
       const actions = {
-        invalidated: this.render.bind(this),
+        invalidated: this.render.bind(this)
       };
       actions[event](source);
-    },
+    }
   };
 
   private options: BlessedCssOptions;
@@ -48,16 +48,16 @@ export default class BlessedCss {
   constructor(
     private screen: widget.Screen,
     cssSource: string,
-    options: Partial<BlessedCssOptions> = {},
+    options: Partial<BlessedCssOptions> = {}
   ) {
     const requiredOptions = {
       dispatcher: this.dispatcher,
-      stylesheet: new Stylesheet(cssSource.toLowerCase()),
+      stylesheet: new Stylesheet(cssSource.toLowerCase())
     };
 
     const defaultOptions = {
       screen: this.screen,
-      fps: 1000 / 60,
+      fps: 1000 / 60
     };
 
     this.options = { ...defaultOptions, ...options, ...requiredOptions };
@@ -79,7 +79,7 @@ export default class BlessedCss {
     // tracking changes for every node
     this.events.forEach(([event, patch]) => {
       on(event, () => NodeStyle.commit(this.screen, patch, this.options));
-      on(`element ${event}`, (x) => NodeStyle.commit(x, patch, this.options));
+      on(`element ${event}`, x => NodeStyle.commit(x, patch, this.options));
     });
 
     NodeStyle.commit(this.screen, { type: "tree" }, this.options);
@@ -87,7 +87,7 @@ export default class BlessedCss {
 
   public detach() {
     this.isAttached = false;
-    this.listeners.forEach((x) => x());
+    this.listeners.forEach(x => x());
     this.listeners = [];
   }
 

@@ -1,15 +1,15 @@
-import Weight from "./weight";
 import NodeStyle from "./node-style";
-import { selectorParser } from "./utils/selector-parser";
 import {
   SelectorBasicData,
-  SelectorBasicType,
+  SelectorBasicType
 } from "./utils/selector-meta-basic";
 import {
-  SelectorComplexData,
-  SelectorPartData,
   SelectorCombinatorData,
+  SelectorComplexData,
+  SelectorPartData
 } from "./utils/selector-meta-complex";
+import { selectorParser } from "./utils/selector-parser";
+import Weight from "./weight";
 
 interface SelectorCheckOptions {
   method: "checkConditions" | "findNodeReverse";
@@ -22,7 +22,7 @@ export {
   SelectorBasicData,
   SelectorPartData,
   SelectorCombinatorData,
-  SelectorComplexData,
+  SelectorComplexData
 };
 
 export default class Selector {
@@ -43,7 +43,7 @@ export default class Selector {
         if (selector.type === "selector") {
           acc.push({
             method: "checkConditions",
-            conditions: selector.value,
+            conditions: selector.value
           });
         } else {
           const last = acc.slice(-1)[0];

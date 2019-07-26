@@ -16,11 +16,11 @@ const nameToType: { [name in PseudoName]?: PseudoArgumentType } = {
   "nth-in-list": "position",
   "nth-last-child": "position",
   "nth-last-of-type": "position",
-  "nth-last-in-list": "position",
+  "nth-last-in-list": "position"
 };
 
 const typeToParser: {
-  [type in PseudoArgumentType]: (type?: string) => PseudoArgumentTest
+  [type in PseudoArgumentType]: (type?: string) => PseudoArgumentTest;
 } = {
   position(argument: string = "") {
     // https://regex101.com/r/oLXkqV/1
@@ -30,7 +30,7 @@ const typeToParser: {
 
     if (!match) {
       throw new Error(
-        `ArgumentParser: Can not parse position argument: ${argument}`,
+        `ArgumentParser: Can not parse position argument: ${argument}`
       );
     }
 
@@ -52,12 +52,12 @@ const typeToParser: {
         ? (x - b) / a >= 0 && ((x - b) / a) % 1 === 0
         : a + b === x;
     };
-  },
+  }
 };
 
 export const getPseudoArgumentTest = (
   name: PseudoName,
-  argument?: string,
+  argument?: string
 ): PseudoArgumentTest | undefined => {
   const type = nameToType[name];
   if (!type) {

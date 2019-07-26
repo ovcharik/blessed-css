@@ -29,7 +29,10 @@ type Curry<T, R> = T extends [any, any, any, any]
   : unknown;
 
 function curry<T extends any[], R>(fn: (...args: T) => R): Curry<T, R>;
-function curry<T extends any[], R>(fn: (...args: T) => R, ...head: T): Curry<T, R> {
+function curry<T extends any[], R>(
+  fn: (...args: T) => R,
+  ...head: T
+): Curry<T, R> {
   const wrap = (...acc: any[]) =>
     acc.length >= fn.length
       ? fn(...(acc as T))

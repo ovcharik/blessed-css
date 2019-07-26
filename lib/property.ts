@@ -1,19 +1,19 @@
 import { Declaration as CssDeclaration, Position as CssPosition } from "css";
-import Weight from "./weight";
 import Selector from "./selector";
 import { memoize } from "./utils/memoize";
-import { propertyDefaults, propertyParser } from "./utils/property-parser";
 import {
-  PropertyValue,
-  PropertyType,
   PropertyAccessors,
   PropertyData,
+  PropertyType,
+  PropertyValue
 } from "./utils/property-meta-base";
+import { propertyDefaults, propertyParser } from "./utils/property-parser";
+import Weight from "./weight";
 
 export default class Property implements PropertyData {
   @memoize()
   public static get defaults() {
-    return propertyDefaults.map((x) => new Property(x));
+    return propertyDefaults.map(x => new Property(x));
   }
 
   @memoize((ctx, x) => x, true)
@@ -27,7 +27,7 @@ export default class Property implements PropertyData {
     }
     const start = (position && position.start) || {};
     const parsed = propertyParser(property, value, start);
-    return parsed.map((x) => new Property(x));
+    return parsed.map(x => new Property(x));
   }
 
   public static extract(property: Property, selector: Selector) {
@@ -45,7 +45,7 @@ export default class Property implements PropertyData {
         // sort by weight
         .sort((a, b) => b.weight.cmp(a.weight))
         // uniq by property name
-        .filter((x, i, a) => i === a.findIndex((f) => x.name === f.name))
+        .filter((x, i, a) => i === a.findIndex(f => x.name === f.name))
     );
   }
 

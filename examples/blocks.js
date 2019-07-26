@@ -37,36 +37,42 @@ const treeLess = `
 `;
 
 const treeJson = {
-  class: 'bg-black line-3',
+  class: "bg-black line-3",
   content: [
     {
-      class: 'bg-h-magenta bg-white',
-      content: [{
-        class: 'fg-h-magenta bg-h-yellow bg-red',
-        content: 'Red block',
-      }],
-    }, {
-      class: 'bg-h-magenta bg-white',
-      content: [{
-        class: 'fg-h-magenta bg-h-yellow bg-green',
-        content: 'Green block',
-      }],
-    }, {
-      class: 'bg-h-magenta bg-white',
-      content: [{
-        class: 'fg-h-magenta bg-h-yellow bg-blue',
-        content: 'Blue block',
-      }],
+      class: "bg-h-magenta bg-white",
+      content: [
+        {
+          class: "fg-h-magenta bg-h-yellow bg-red",
+          content: "Red block",
+        },
+      ],
     },
-  ]
+    {
+      class: "bg-h-magenta bg-white",
+      content: [
+        {
+          class: "fg-h-magenta bg-h-yellow bg-green",
+          content: "Green block",
+        },
+      ],
+    },
+    {
+      class: "bg-h-magenta bg-white",
+      content: [
+        {
+          class: "fg-h-magenta bg-h-yellow bg-blue",
+          content: "Blue block",
+        },
+      ],
+    },
+  ],
 };
 
+const less = require("less");
 
-const less = require('less');
-
-const blessed = require('blessed');
-const blessedCss = require('..');
-
+const blessed = require("blessed");
+const blessedCss = require("..");
 
 less.render(treeLess).then(({ css }) => {
   const screen = blessed.screen();
@@ -75,10 +81,13 @@ less.render(treeLess).then(({ css }) => {
   // recursive tree building
   (function buildTree(parent, { class: cl, content }) {
     const node = blessed.element({ parent, class: cl });
-    if (typeof(content) === 'string') { node.setContent(content); }
-    else { content.forEach(buildTree.bind(null, node)); }
+    if (typeof content === "string") {
+      node.setContent(content);
+    } else {
+      content.forEach(buildTree.bind(null, node));
+    }
   })(screen, treeJson);
 
-  screen.key('q', () => process.exit(0));
+  screen.key("q", () => process.exit(0));
   screen.render();
 }, console.error);

@@ -1,7 +1,7 @@
 import NodeStyle from "./node-style";
 import NodeTree from "./node-tree";
-import { memoize } from "./utils/memoize";
 import { createLensByPath } from "./utils/lens";
+import { memoize } from "./utils/memoize";
 
 export type NodeStatePatchType =
   | "attrs"
@@ -18,7 +18,7 @@ export type NodeStateDetail = [string, NodeStateArg];
 export type NodeStateValue = {
   [group in NodeStateGroup]?: {
     [key: string]: NodeStateArg;
-  }
+  };
 };
 
 export interface NodeStatePatch {
@@ -27,6 +27,12 @@ export interface NodeStatePatch {
 }
 
 export default class NodeState {
+  public get value() {
+    return this.current;
+  }
+  public get hasChanges() {
+    return this.previous !== this.current;
+  }
   @memoize((ctx, x) => x)
   private static lens(path: string) {
     return createLensByPath<NodeStateValue, NodeStateArg>(path);
@@ -35,12 +41,43 @@ export default class NodeState {
   private previous?: NodeStateValue;
   private current: NodeStateValue = {};
 
-  public get value() {
-    return this.current;
-  }
-  public get hasChanges() {
-    return this.previous !== this.current;
-  }
+  private groupDetails: {
+    [method in NodeStateGroup]: (
+      nodeStyle: NodeStyle,
+      nodeTree: NodeTree,
+      patch: NodeStatePatch
+    ) => NodeStateDetail[];
+  } = {
+    attrs(nodeStyle, nodeTree, patch) {
+      return [
+        ["id", nodeStyle.nodeId],
+        ["node", nodeStyle.nodeType],
+        ["class", nodeStyle.nodeClass]
+      ];
+    },
+
+    input(nodeStyle, nodeTree, patch) {
+      return [[patch.type, patch.value]];
+    },
+
+    tree(nodeStyle, nodeTree, patch) {
+      return nodeTree.isRoot
+        ? []
+        : [
+            ["nodeIndex", nodeTree.nodeIndex],
+            ["nodeTotal", nodeTree.nodeTotal],
+            ["typeIndex", nodeTree.typeIndex],
+            ["typeTotal", nodeTree.typeTotal],
+            ["listIndex", nodeTree.listIndex],
+            ["listTotal", nodeTree.listTotal],
+            ["listSelected", nodeTree.listSelected]
+          ];
+    },
+
+    children(nodeStyle, nodeTree, patch) {
+      return [["total", nodeTree.childrenTotal]];
+    }
+  };
 
   public constructor(private nodeStyle: NodeStyle) {}
 
@@ -60,7 +97,7 @@ export default class NodeState {
     const details = this.groupDetails[group](
       this.nodeStyle,
       this.nodeStyle.nodeTree,
-      patch,
+      patch
     );
     return details.map<NodeStateDetail>(([path, value]) => {
       return [`${group}.${path}`, value];
@@ -81,42 +118,4 @@ export default class NodeState {
       }
     }
   }
-
-  private groupDetails: {
-    [method in NodeStateGroup]: (
-      nodeStyle: NodeStyle,
-      nodeTree: NodeTree,
-      patch: NodeStatePatch,
-    ) => NodeStateDetail[]
-  } = {
-    attrs(nodeStyle, nodeTree, patch) {
-      return [
-        ["id", nodeStyle.nodeId],
-        ["node", nodeStyle.nodeType],
-        ["class", nodeStyle.nodeClass],
-      ];
-    },
-
-    input(nodeStyle, nodeTree, patch) {
-      return [[patch.type, patch.value]];
-    },
-
-    tree(nodeStyle, nodeTree, patch) {
-      return nodeTree.isRoot
-        ? []
-        : [
-            ["nodeIndex", nodeTree.nodeIndex],
-            ["nodeTotal", nodeTree.nodeTotal],
-            ["typeIndex", nodeTree.typeIndex],
-            ["typeTotal", nodeTree.typeTotal],
-            ["listIndex", nodeTree.listIndex],
-            ["listTotal", nodeTree.listTotal],
-            ["listSelected", nodeTree.listSelected],
-          ];
-    },
-
-    children(nodeStyle, nodeTree, patch) {
-      return [["total", nodeTree.childrenTotal]];
-    },
-  };
 }

@@ -1,9 +1,8 @@
 {
   "defaultSeverity": "error",
-  "extends": [
-    "tslint:recommended"
-  ],
+  "extends": ["tslint:recommended", "tslint-plugin-prettier", "tslint-config-prettier"],
   "rules": {
+    "prettier": true,
     "no-console": {
       "severity": "warning"
     },
@@ -14,9 +13,13 @@
       "severity": "warning"
     },
     "quotemark": false,
-    "member-ordering": false,
     "interface-name": false,
-    "ordered-imports": false,
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "max-line-length": {
+      "options": {
+        "limit": 100
+      },
+      "severity": "warning"
+    }
   }
 }

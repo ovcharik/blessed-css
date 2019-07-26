@@ -1,5 +1,5 @@
-import { Position as CssPosition } from "css";
 import { widget } from "blessed";
+import { Position as CssPosition } from "css";
 
 export type PropertyValue =
   | null
@@ -26,7 +26,7 @@ export type PropertyType =
   | "valign";
 
 export type PropertyAccessors = (
-  get?: boolean,
+  get?: boolean
 ) => (node: widget.Element, value?: PropertyValue) => PropertyValue;
 
 export interface PropertyData {
@@ -119,18 +119,18 @@ const propertiesTable: PropertiesTableRow[] = [
   ["draggable", accessByPath("draggable"), "boolean", null],
 
   ["mouseable", accessByFn("enableMouse", "clickable"), "boolean", null],
-  ["keyable", accessByFn("enableKeys", "keyable"), "boolean", null],
+  ["keyable", accessByFn("enableKeys", "keyable"), "boolean", null]
 ];
 
 // helpers
 const tableReducer = <
   T extends PropertyValue | PropertyType | PropertyAccessors
 >(
-  i: number,
+  i: number
 ) => {
   return (
     acc: { [key: string]: T },
-    row: PropertiesTableRow,
+    row: PropertiesTableRow
   ): { [key: string]: T } => {
     acc[row[0]] = row[i] as T;
     return acc;
@@ -138,7 +138,7 @@ const tableReducer = <
 };
 
 const reduce = <T extends PropertyValue | PropertyType | PropertyAccessors>(
-  i: number,
+  i: number
 ) => {
   const reducer = tableReducer<T>(i);
   return propertiesTable.reduce<{ [key: string]: T }>(reducer, {});
@@ -169,7 +169,7 @@ export const propertyDefaults: PropertyData[] = propertiesTable.map(
       isImportant: false,
       isKnown: true,
       isValid: true,
-      isDefault: true,
+      isDefault: true
     };
-  },
+  }
 );

@@ -14,11 +14,11 @@ export default class Weight {
       id: 2,
       class: 3,
       pseudo: 3,
-      node: 4,
+      node: 4
     };
 
     const complexSelectors = selector.components.filter(
-      ({ type }) => type === "selector",
+      ({ type }) => type === "selector"
     ) as SelectorPartData[];
 
     const weight = complexSelectors
@@ -38,7 +38,7 @@ export default class Weight {
 
   private constructor(
     public readonly value: WeightValue = Weight.zeroValue,
-    public readonly position: CssPosition,
+    public readonly position: CssPosition
   ) {}
 
   public sum(right: Weight): Weight {
@@ -55,7 +55,7 @@ export default class Weight {
         acc[i] = this.value[i] - x;
         return acc;
       }, Weight.zeroValue)
-      .find((v) => v !== 0);
+      .find(v => v !== 0);
 
     if (result) {
       return result;

@@ -4,17 +4,13 @@ type CompositionMethod = "match" | "alloc";
 type CompositionSuffix = [string, boolean?];
 type CompositionPair = [string, string];
 type CompositionPairs = CompositionPair[];
-type CompositionsTableRow = [
-  string,
-  CompositionMethod,
-  ...CompositionSuffix[]
-];
+type CompositionsTableRow = [string, CompositionMethod, ...CompositionSuffix[]];
 
 const compositionsTable: CompositionsTableRow[] = [
   ["background", "match", ["&fill", true], ["&color", true]],
   ["border", "match", ["&fill", true], ["&background"], ["&color", true]],
   ["padding", "alloc", ["&top"], ["&right"], ["&bottom"], ["&left"]],
-  ["position", "alloc", ["top"], ["right"], ["bottom"], ["left"]],
+  ["position", "alloc", ["top"], ["right"], ["bottom"], ["left"]]
 ];
 
 const compileComposition = (
@@ -24,12 +20,10 @@ const compileComposition = (
   ...suffixes: CompositionSuffix[]
 ): ((values: string[]) => CompositionPairs) => {
   const props = suffixes
-    .map(
-      ([suf, opt]): [string, boolean] => [
-        suf.replace(/\&/g, base + "-"),
-        Boolean(opt),
-      ],
-    )
+    .map(([suf, opt]): [string, boolean] => [
+      suf.replace(/\&/g, base + "-"),
+      Boolean(opt)
+    ])
     .map(([prop, opt]) => ({ prop, opt }));
 
   // for each value look for a property of a suitable
@@ -66,7 +60,7 @@ const compileComposition = (
       1: [0, 0, 0, 0], // one for all
       2: [0, 1, 0, 1], // 1st: top, bottom; 2nd: right, left
       3: [0, 1, 2, 1], // 1st: top; 2nd: right, left; 3rd: bottom
-      4: [0, 1, 2, 3], // top, right, bottom, left
+      4: [0, 1, 2, 3] // top, right, bottom, left
     };
     return (values: string[]) => {
       let count = values.length;
@@ -77,7 +71,7 @@ const compileComposition = (
         count = 4;
       }
       const result = allocation[count].map(
-        (vi, pi) => [props[pi].prop, values[vi]] as CompositionPair,
+        (vi, pi) => [props[pi].prop, values[vi]] as CompositionPair
       );
       return result;
     };
@@ -96,7 +90,7 @@ const compositionToPairsMap = compositionsTable.reduce<{
 
 export const getPropertyPairs = (
   property: string,
-  value: string,
+  value: string
 ): CompositionPairs => {
   return compositionToPairsMap.hasOwnProperty(property)
     ? compositionToPairsMap[property](value.split(/\s+/))

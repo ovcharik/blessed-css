@@ -50,8 +50,8 @@ const extractBracketsContent = (selector: string) => {
     output,
     replacements: replacements.reduce<{ [key: string]: string }>(
       (acc, x, i) => ({ ...acc, [`$${i}`]: x }),
-      {},
-    ),
+      {}
+    )
   };
 };
 

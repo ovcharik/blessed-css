@@ -16,7 +16,7 @@ export default class NodeTree {
     return (
       (this.node.parent &&
         this.node.parent.children &&
-        this.node.parent.children.filter((x) => x.type === this.node.type)) ||
+        this.node.parent.children.filter(x => x.type === this.node.type)) ||
       void 0
     );
   }

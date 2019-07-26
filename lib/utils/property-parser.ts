@@ -1,6 +1,6 @@
 import { Position as CssPosition } from "css";
 
-import { PropertyData, getPropertyAccessors } from "./property-meta-base";
+import { getPropertyAccessors, PropertyData } from "./property-meta-base";
 import { getPropertyType } from "./property-meta-base";
 import { getPropertyPairs } from "./property-meta-compositions";
 import { castValueType, testValueType } from "./property-meta-types";
@@ -10,7 +10,7 @@ export { propertyDefaults } from "./property-meta-base";
 export const propertyParser = (
   property: string,
   value: string,
-  position: CssPosition,
+  position: CssPosition
 ): PropertyData[] => {
   const [, val, important] = value
     .trim()
@@ -35,7 +35,7 @@ export const propertyParser = (
         isImportant: Boolean(important),
         isKnown: Boolean(getPropertyType(p)),
         isValid: testValueType(p, v),
-        isDefault: false,
+        isDefault: false
       };
     });
 };

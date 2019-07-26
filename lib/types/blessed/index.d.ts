@@ -51,35 +51,36 @@ declare module "blessed" {
 
       constructor(options: NodeOptions);
 
-      public forDescendants(iterator: (node: Node) => void, self: boolean): void;
+      public forDescendants(
+        iterator: (node: Node) => void,
+        self: boolean
+      ): void;
     }
 
     // Screen
     interface ScreenOptions extends NodeOptions {}
 
     class Screen extends Node implements Renderable {
+      public clickable: boolean;
+      public keyable: boolean;
       public render(): void;
 
       public enableMouse(el: Element): void;
       public enableKeys(el: Element): void;
       public enableInput(el: Element): void;
-
-      public clickable: boolean;
-      public keyable: boolean;
     }
 
     // Element
     interface ElementOptions extends NodeOptions {}
 
     class Element extends Node implements Renderable {
+      public clickable: boolean;
+      public keyable: boolean;
       public render(): void;
 
       public enableMouse(): void;
       public enableKeys(): void;
       public enableInput(): void;
-
-      public clickable: boolean;
-      public keyable: boolean;
     }
 
     // Box

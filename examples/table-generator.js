@@ -1,3 +1,4 @@
+// prettier-ignore
 const propertyTable = [
   [ 'bold'                    , 'style.bold'              , 'boolean'   , undefined ],
   [ 'underline'               , 'style.underline'         , 'boolean'   , undefined ],
@@ -35,42 +36,44 @@ const propertyTable = [
   [ 'keyable'                 , null                      , 'boolean'   , null      ]
 ];
 
-const _ = global._ = require('lodash');
-const blessed = require('blessed');
-const blessedColors = require('blessed/lib/colors');
+const _ = (global._ = require("lodash"));
+const blessed = require("blessed");
+const blessedColors = require("blessed/lib/colors");
 console.log(blessedColors);
 
 const screen = blessed.screen();
 const el = blessed.element();
 
-
 const { rows, cols } = _.chain(propertyTable)
-  .transform((table, [ prop, path, type ]) => {
-    const { cols } = table;
+  .transform(
+    (table, [prop, path, type]) => {
+      const { cols } = table;
 
-    const defaultValue = _.has(el, path) ? _.get(el, path) : null;
+      const defaultValue = _.has(el, path) ? _.get(el, path) : null;
 
-    const row = [ prop, path, type, defaultValue ]
-      .map(JSON.stringify)
-      .map(v => v || 'undefined');
+      const row = [prop, path, type, defaultValue].map(JSON.stringify).map(v => v || "undefined");
 
-    table.rows.push(row);
-    table.cols = _.chain(row).map(s => s.length).zip(table.cols).map(_.max).value();
-  }, { rows: [], cols: [ 25, 25, 0, 0 ] })
+      table.rows.push(row);
+      table.cols = _.chain(row)
+        .map(s => s.length)
+        .zip(table.cols)
+        .map(_.max)
+        .value();
+    },
+    { rows: [], cols: [25, 25, 0, 0] },
+  )
   .value();
 
-
 const table = [
-  '['
-  ,
+  "[",
   rows
-    .map(row => row.map( (c, i) => _.padEnd(c, cols[i]) ))
-    .map(row => `  [ ${row.join(' , ')} ]`)
-    .join(',\n')
-  ,
-  ']'
-].join('\n').replace(/"/g, `'`);
-
+    .map(row => row.map((c, i) => _.padEnd(c, cols[i])))
+    .map(row => `  [ ${row.join(" , ")} ]`)
+    .join(",\n"),
+  "]",
+]
+  .join("\n")
+  .replace(/"/g, `'`);
 
 global.rows = rows;
 global.cols = cols;

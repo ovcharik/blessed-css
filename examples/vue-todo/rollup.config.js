@@ -7,8 +7,5 @@ export default {
     file: "dist/index.js",
     format: "cjs",
   },
-  plugins: [
-    css({ output: "dist/style.css" }),
-    vue({ css: false }),
-  ],
+  plugins: [css({ output: "dist/style.css" }), vue({ css: false })],
 };

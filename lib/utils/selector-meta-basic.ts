@@ -1,7 +1,7 @@
 import {
-  PseudoName,
-  PseudoArgumentTest,
   getPseudoArgumentTest,
+  PseudoArgumentTest,
+  PseudoName
 } from "./selector-meta-pseudo";
 
 export type SelectorBasicType = "id" | "class" | "pseudo" | "node";
@@ -27,7 +27,7 @@ const symbolToType = (symbol: string): SelectorBasicType => {
 
 export const parseBasic = (
   selector: string,
-  replacements: { [key: string]: string },
+  replacements: { [key: string]: string }
 ): SelectorBasicData[] => {
   // split every selector on 4 part, e.g.:
   // 'node.foo:not($1)' => [
@@ -42,7 +42,7 @@ export const parseBasic = (
   // check split result length
   if (parts.length % 4 !== 0) {
     throw new Error(
-      `SimpleSelectorParser: Can not parse selector: "${selector}"`,
+      `SimpleSelectorParser: Can not parse selector: "${selector}"`
     );
   }
 
@@ -55,7 +55,7 @@ export const parseBasic = (
   // split must be matched fully
   if (chunks.some(([empty]) => Boolean(empty))) {
     throw new Error(
-      `SimpleSelectorParser: Can not parse selector: "${selector}"`,
+      `SimpleSelectorParser: Can not parse selector: "${selector}"`
     );
   }
 
@@ -72,7 +72,7 @@ export const parseBasic = (
   // star should be the node selector
   if (selectors.find(({ type, value }) => value === "*" && type !== "node")) {
     throw new Error(
-      `SimpleSelectorParser: "*" is not node selector: "${selector}"`,
+      `SimpleSelectorParser: "*" is not node selector: "${selector}"`
     );
   }
 

@@ -24,5 +24,5 @@ export function detach(screen: widget.Screen) {
 
 export default {
   attach,
-  detach,
+  detach
 };

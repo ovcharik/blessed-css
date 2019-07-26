@@ -30,8 +30,6 @@ const instance = new Vue({
   },
 });
 
-
 const el = Vue.dom.createElement();
 Vue.dom.append(el);
 instance.$mount(el);
-

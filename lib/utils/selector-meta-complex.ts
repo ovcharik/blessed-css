@@ -1,4 +1,4 @@
-import { SelectorBasicData, parseBasic } from "./selector-meta-basic";
+import { parseBasic, SelectorBasicData } from "./selector-meta-basic";
 
 export type SelectorPartValue = SelectorBasicData[];
 export interface SelectorPartData {
@@ -15,7 +15,7 @@ export interface SelectorCombinatorData {
 export type SelectorComplexData = SelectorPartData | SelectorCombinatorData;
 
 const symbolToCombinator = (
-  symbol: string,
+  symbol: string
 ): SelectorCombinatorValue | undefined => {
   switch (symbol) {
     case "+":
@@ -33,19 +33,19 @@ const symbolToCombinator = (
 
 export const parseComplex = (
   selector: string,
-  replacements: { [key: string]: string },
+  replacements: { [key: string]: string }
 ): SelectorComplexData[] => {
   const selectors = selector
     // split on combinators and simple selectors
     // e.g.: 'a > b c' => ['a', '>', 'b', ' ', 'c']
     .split(/(?:\s*(~|>|\+|\s)\s*)/i)
-    .map((x) => {
+    .map(x => {
       const combinator = symbolToCombinator(x);
       return combinator
         ? ({ type: "combinator", value: combinator } as SelectorCombinatorData)
         : ({
             type: "selector",
-            value: parseBasic(x, replacements),
+            value: parseBasic(x, replacements)
           } as SelectorPartData);
     });
   return selectors;

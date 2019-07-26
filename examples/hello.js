@@ -35,17 +35,17 @@ const css = `
   }
 `;
 
-const blessed = require('blessed');
-const blessedCss = require('..');
+const blessed = require("blessed");
+const blessedCss = require("..");
 
 const screen = blessed.screen();
 blessedCss.attach(screen, css);
 
-const content = blessed.element({ parent: screen , class: 'content bg-black' });
-const banner  = blessed.element({ parent: content, class: 'banner bg-white'  });
-const text    = blessed.element({ parent: banner , class: 'bg-magenta' });
+const content = blessed.element({ parent: screen, class: "content bg-black" });
+const banner = blessed.element({ parent: content, class: "banner bg-white" });
+const text = blessed.element({ parent: banner, class: "bg-magenta" });
 
-text.setContent('Hello, World!');
+text.setContent("Hello, World!");
 
-screen.key('q', () => process.exit(0));
+screen.key("q", () => process.exit(0));
 screen.render();

@@ -10,18 +10,18 @@ const memoizeStorage = new WeakMap();
  */
 export function memoize(
   resolver?: (ctx: any, ...args: any[]) => any,
-  useWeakMap: boolean = false,
+  useWeakMap: boolean = false
 ): MethodDecorator {
   return (
     target: object,
     propertyKey: string | symbol,
-    descriptor: PropertyDescriptor,
+    descriptor: PropertyDescriptor
   ) => {
     const property = descriptor.hasOwnProperty("get")
       ? "get"
       : descriptor.hasOwnProperty("value")
-        ? "value"
-        : null;
+      ? "value"
+      : null;
     if (!property) {
       return descriptor;
     }

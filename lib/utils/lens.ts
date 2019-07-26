@@ -3,12 +3,12 @@ interface Nested<T, EndType = never> {
 }
 
 type Getter<T, EndType = never> = (
-  hash: Nested<T, EndType>,
+  hash: Nested<T, EndType>
 ) => T | Nested<T, EndType> | EndType | undefined;
 
 type Setter<T, EndType = never> = (
   hash: Nested<T, EndType>,
-  value: T | Nested<T, EndType> | EndType,
+  value: T | Nested<T, EndType> | EndType
 ) => Nested<T, EndType>;
 
 type Modifier<T, EndType = never> = (value: T) => T | EndType;
@@ -18,28 +18,28 @@ interface Lens<T, EndType = never> {
   set: Setter<T, EndType>;
   modify: (
     hash: Nested<T, EndType>,
-    func: Modifier<T, EndType>,
+    func: Modifier<T, EndType>
   ) => Nested<T, EndType> | EndType;
   compose: (nested: Lens<T, EndType>, fill?: boolean) => Lens<T, EndType>;
 }
 
 export function createLens<T, EndType = never>(
   property: string,
-  defaultValue?: T,
+  defaultValue?: T
 ): Lens<T, EndType>;
 export function createLens<T, EndType = never>(
   getter: Getter<T, EndType>,
-  setter: Setter<T, EndType>,
+  setter: Setter<T, EndType>
 ): Lens<T, EndType>;
 export function createLens<T, EndType = never>(
   getterOrProperty: string | Getter<T, EndType>,
-  setterOrDefault?: ReturnType<Getter<T, EndType>> | Setter<T, EndType>,
+  setterOrDefault?: ReturnType<Getter<T, EndType>> | Setter<T, EndType>
 ): Lens<T, EndType> {
   let getter = getterOrProperty as Getter<T, EndType>;
   let setter = setterOrDefault as Setter<T, EndType>;
 
   if (typeof getterOrProperty === "string") {
-    getter = (hash) => {
+    getter = hash => {
       return hash.hasOwnProperty(getterOrProperty)
         ? hash[getterOrProperty]
         : (setterOrDefault as ReturnType<Getter<T, EndType>>);
@@ -62,7 +62,7 @@ export function createLens<T, EndType = never>(
 
     compose(nested, fill?) {
       return createLens<T, EndType>(
-        (hash) => {
+        hash => {
           const nestedHash =
             (getter(hash) as Nested<T, EndType>) || (fill && {});
           return nested.get(nestedHash);
@@ -72,24 +72,24 @@ export function createLens<T, EndType = never>(
             (getter(hash) as Nested<T, EndType>) || (fill && {});
           const updatedHash = nested.set(nestedHash, value);
           return setter(hash, updatedHash);
-        },
+        }
       );
-    },
+    }
   };
 }
 
 export function createLensByPath<T, EndType = never>(
   path: string,
-  fill: boolean = true,
+  fill: boolean = true
 ): Lens<T, EndType> {
   return path
     .split(".")
-    .map((part) => createLens<T, EndType>(part))
+    .map(part => createLens<T, EndType>(part))
     .reduce<Lens<T, EndType> | undefined>((acc, part) => {
       return acc
         ? acc.compose(
             part,
-            fill,
+            fill
           )
         : part;
     }, void 0) as Lens<T, EndType>;
